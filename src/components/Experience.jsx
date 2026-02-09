@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, Calendar, Building2, UserCircle, CheckCircle2 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-import IndustrialBackground from './IndustrialBackground';
 
 const Experience = ({ data }) => {
     const { theme } = useTheme();
     const [isMobile, setIsMobile] = useState(false);
+
+    // Centered infinity loop path (occupies roughly x:200..600 in a 0..800 viewBox)
+    const infinityPath = 'M 200,200 C 200,100 350,100 400,200 C 450,300 600,300 600,200 C 600,100 450,100 400,200 C 350,300 200,300 200,200 Z';
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -17,7 +19,6 @@ const Experience = ({ data }) => {
 
     return (
         <section id="experience" style={{ position: 'relative', overflow: 'hidden' }}>
-            <IndustrialBackground type="experience" />
             <div className="section-padding" style={{
                 padding: isMobile ? '100px 15px 40px' : '120px 6% 80px',
                 background: 'transparent',
@@ -47,8 +48,9 @@ const Experience = ({ data }) => {
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ duration: 0.6, delay: index * 0.1 }}
                             style={{
-                                background: theme.cardBg,
-                                backdropFilter: 'blur(20px)',
+                                background: theme.mode === 'dark' ? theme.cardBg : theme.glassBg,
+                                backdropFilter: theme.mode === 'dark' ? 'blur(20px)' : 'blur(16px)',
+                                WebkitBackdropFilter: theme.mode === 'dark' ? 'blur(20px)' : 'blur(16px)',
                                 borderRadius: '32px',
                                 padding: 'clamp(20px, 5vw, 50px)',
                                 border: `1px solid ${theme.border}`,
@@ -58,15 +60,81 @@ const Experience = ({ data }) => {
                                 width: '100%' // Wide screen layout
                             }}
                         >
+                            {/* Per-company panel background: nucleus + rotating infinity (blurred) */}
                             <div style={{
                                 position: 'absolute',
-                                top: '-50px',
-                                right: '-50px',
-                                width: '200px',
-                                height: '200px',
-                                background: `radial-gradient(circle, ${theme.accent}0D 0%, transparent 70%)`,
-                                zIndex: 0
-                            }} />
+                                inset: 0,
+                                pointerEvents: 'none',
+                                zIndex: 0,
+                                opacity: theme.mode === 'dark' ? 0.35 : 0.22,
+                                filter: theme.mode === 'dark' ? 'blur(1.4px)' : 'blur(1.1px)'
+                            }}>
+                                <motion.div
+                                    animate={{ scale: [1, 1.12, 1], opacity: [0.30, 0.55, 0.30] }}
+                                    transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        width: isMobile ? 'min(88%, 440px)' : 'min(72%, 560px)',
+                                        height: isMobile ? 'min(88%, 440px)' : 'min(72%, 560px)',
+                                        x: '-50%',
+                                        y: '-50%',
+                                        transformOrigin: 'center',
+                                        background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 75%)',
+                                        borderRadius: '50%',
+                                        filter: 'blur(110px)'
+                                    }}
+                                />
+
+                                <svg
+                                    width={isMobile ? 'min(96%, 560px)' : 'min(92%, 980px)'}
+                                    height={isMobile ? 'min(52%, 300px)' : 'min(56%, 460px)'}
+                                    viewBox="0 0 800 400"
+                                    preserveAspectRatio="xMidYMid meet"
+                                    style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)'
+                                    }}
+                                    aria-hidden="true"
+                                >
+                                    <motion.path
+                                        d={infinityPath}
+                                        fill="none"
+                                        stroke={theme.border}
+                                        strokeWidth="3"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        opacity={theme.mode === 'dark' ? 0.55 : 0.35}
+                                    />
+                                    <motion.path
+                                        d={infinityPath}
+                                        fill="none"
+                                        stroke={theme.mode === 'dark' ? '#fff' : theme.mutedText}
+                                        strokeWidth="3.6"
+                                        strokeLinecap="butt"
+                                        strokeLinejoin="round"
+                                        strokeDasharray="28 92"
+                                        animate={{ strokeDashoffset: [60, -180] }}
+                                        transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+                                        opacity={theme.mode === 'dark' ? 0.42 : 0.38}
+                                    />
+                                    <motion.path
+                                        d={infinityPath}
+                                        fill="none"
+                                        stroke="var(--netflix-red)"
+                                        strokeWidth="4.2"
+                                        strokeLinecap="butt"
+                                        strokeLinejoin="round"
+                                        strokeDasharray="28 92"
+                                        animate={{ strokeDashoffset: [0, -240] }}
+                                        transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+                                        opacity={theme.mode === 'dark' ? 0.58 : 0.52}
+                                    />
+                                </svg>
+                            </div>
 
                             <div style={{ position: 'relative', zIndex: 1 }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '30px', marginBottom: '40px' }}>

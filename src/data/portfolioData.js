@@ -33,9 +33,19 @@ export const portfolioData = {
     ],
     education: [
         {
-            degree: "B. TECH | Electrical and Electronics Engineering",
-            year: "2019",
-            details: "Aggregate of 65%"
+            degree: "Bachelor of Technology",
+            institute: "Electrical & Electronics Engineering",
+            year: "2016 - 2019"
+        },
+        {
+            degree: "Diploma Degree",
+            institute: "Chaitanya Institute of Technology",
+            year: "2012 - 2015"
+        },
+        {
+            degree: "SSC School",
+            institute: "Sadhana Public School",
+            year: "2012"
         }
     ],
     experience: [
@@ -55,7 +65,7 @@ export const portfolioData = {
             tools: "Salesforce, Mule Soft, Data dog, Jira, Webex, Postman, ETL tools, & other."
         },
         {
-            company: "AMDOCS (Pay Role: NITYO Infotech)",
+            company: "AMDOCS",
             role: "Cloud DevOps Engineer",
             period: "Feb 2023 – Sep 2024",
             client: "AT&T",
@@ -151,7 +161,7 @@ export const portfolioData = {
             title: "Multi-Cloud Infrastructure Automation",
             description: "Developed an enterprise-grade Infrastructure as Code (IaC) framework using Terraform and Terragrunt to manage hybrid cloud resources. Standardized deployment patterns across AWS and Azure, implementing automated compliance checks and state management in encrypted S3 buckets, reducing infrastructure lead time from days to minutes.",
             technologies: ["Terraform", "AWS", "Azure", "GitHub Actions", "Python", "Terragrunt"],
-            link: "https://github.com/karaydeepsagar/multi-cloud-iac",
+            link: "https://github.com/karaydeepsagar/3tier_terraform",
             image: "https://www.sangfor.com/sites/default/files/inline-images/What-is-Cloud-Automation.jpg",
             demo: null
         },
@@ -173,7 +183,7 @@ export const portfolioData = {
             date: "October 15, 2025",
             readTime: "5 min read",
             image: "https://astconsulting.in/wp-content/uploads/2025/10/mastering-infrastructure-as-code-comparing-terraform-and-opentofu-for-optimal-deployment-featured-1.jpg",
-            link: "#"
+            link: "https://medium.com/ankercloud-engineering/state-management-in-terraform-from-basics-to-best-practices-d8df275ca90f"
         },
         {
             id: 2,
@@ -182,7 +192,7 @@ export const portfolioData = {
             date: "September 22, 2025",
             readTime: "8 min read",
             image: "https://www.simplyblock.io/wp-content/media/Kubernetes.png?ver=f0fcc7590cc003a17022e897c61660fea84ff93b",
-            link: "#"
+            link: "https://medium.com/@daniel.stefanelli.h/kubernetes-101-a-beginners-guide-to-mastering-container-orchestration-155d3a5ee72b"
         },
         {
             id: 3,
@@ -191,7 +201,7 @@ export const portfolioData = {
             date: "August 10, 2025",
             readTime: "6 min read",
             image: "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fkd3dzgqr2bwmlxdybcib.jpg", // Lock/Sec
-            link: "#"
+            link: "https://medium.com/@gupta.surender.1990/ci-cd-security-best-practices-how-to-secure-your-devops-pipeline-in-2025-53cd02bb3846"
         }
     ]
 };

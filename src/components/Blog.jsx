@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowRight, BookOpen } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-import IndustrialBackground from './IndustrialBackground';
 
 const Blog = ({ data }) => {
     const { theme } = useTheme();
@@ -17,8 +16,28 @@ const Blog = ({ data }) => {
 
     return (
         <section id="blog" style={{ position: 'relative', overflow: 'hidden' }}>
-            <IndustrialBackground type="blog" />
-            <div className="section-padding" style={{ padding: isMobile ? '100px 15px 40px' : '120px 6% 80px', background: 'transparent', minHeight: '100vh' }}>
+            {/* Nucleus glow (background) sized for this panel (LEFT) */}
+            <motion.div
+                animate={{ opacity: [0.10, 0.18, 0.10], scale: [1, 1.08, 1] }}
+                transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: isMobile ? '50%' : '22%',
+                    width: 'min(980px, 78vw)',
+                    height: 'min(980px, 78vw)',
+                    x: '-50%',
+                    y: '-50%',
+                    transformOrigin: 'center',
+                    background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 72%)',
+                    borderRadius: '50%',
+                    filter: 'blur(130px)',
+                    opacity: theme.mode === 'dark' ? 0.22 : 0.14,
+                    pointerEvents: 'none',
+                    zIndex: 0
+                }}
+            />
+            <div className="section-padding" style={{ padding: isMobile ? '100px 15px 40px' : '120px 6% 80px', background: 'transparent', minHeight: '100vh', position: 'relative', zIndex: 1 }}>
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -26,7 +45,7 @@ const Blog = ({ data }) => {
                     style={{ textAlign: 'center', marginBottom: '80px' }}
                 >
                     <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '800', marginBottom: '20px', color: theme.primaryText }}>
-                        Industrial <span style={{ color: theme.accent }}>Insights</span>
+                        <span style={{ color: theme.accent }}>Industrial</span> <span>Insights</span>
                     </h2>
                     <p style={{ color: theme.mutedText, fontSize: '1.2rem', maxWidth: '700px', margin: '0 auto' }}>
                         Technical deep-dives into Cloud Architecture, DevOps patterns, and security best practices.

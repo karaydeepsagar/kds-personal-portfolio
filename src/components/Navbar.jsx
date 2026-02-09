@@ -13,7 +13,7 @@ const Navbar = () => {
     const lastActiveRef = useRef('home');
 
     useEffect(() => {
-        const sections = ['home', 'projects', 'experience', 'skills', 'blog', 'contact'];
+        const sections = ['home', 'projects', 'experience', 'skills', 'education', 'blog', 'contact'];
 
         const updateOnScroll = () => {
             rafIdRef.current = null;
@@ -53,6 +53,7 @@ const Navbar = () => {
         { name: 'Projects', id: 'projects' },
         { name: 'Experience', id: 'experience' },
         { name: 'Skills', id: 'skills' },
+        { name: 'Education', id: 'education' },
         { name: 'Blog', id: 'blog' },
         { name: 'Contact', id: 'contact' },
     ];

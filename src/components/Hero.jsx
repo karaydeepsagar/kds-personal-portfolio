@@ -4,14 +4,48 @@ import { Play, Info } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import IndustrialBackground from './IndustrialBackground';
 // DevOps & Cloud Icons from multiple sets to ensure availability
-import { SiDocker, SiKubernetes, SiAnsible, SiJenkins, SiDatadog, SiAmazonwebservices, SiTerraform, SiGrafana } from 'react-icons/si';
+import { SiDocker, SiKubernetes, SiAnsible, SiJenkins, SiDatadog, SiAmazonwebservices, SiTerraform, SiGrafana, SiGithub } from 'react-icons/si';
 import { VscAzure, VscTerminal } from 'react-icons/vsc';
+
+// Gradient multi-color GCP-inspired cloud mark (approx)
+const GcpGradientIcon = ({ size = 24 }) => (
+    <svg
+        width={size}
+        height={size}
+        // Tighter viewBox so the mark fills the same visual area as react-icons at the same `size`.
+        viewBox="12 10 52 44"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+        preserveAspectRatio="xMidYMid meet"
+    >
+        <defs>
+            <linearGradient id="gcpGrad" x1="10" y1="18" x2="54" y2="46" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stopColor="#4285F4" />
+                <stop offset="0.35" stopColor="#EA4335" />
+                <stop offset="0.7" stopColor="#FBBC05" />
+                <stop offset="1" stopColor="#34A853" />
+            </linearGradient>
+        </defs>
+
+        <path
+            d="M18 33C18 26 23.2 21 30 21C31.7 16.8 36 14 40.2 14C46.7 14 51.2 18.4 52.4 24.2C57.3 25.1 61 29.2 61 34.2C61 40.3 56.1 45 50 45H25.5C21.4 45 18 41.7 18 37.6C18 35 19.3 33 22 32"
+            stroke="url(#gcpGrad)"
+            strokeWidth={Math.max(3.6, size * 0.11)}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity="0.95"
+        />
+    </svg>
+);
 
 /**
  * DevOpsAtom: Upgraded with 3D-simulated kinetic orbits.
  * Ensures consistent spacing between icons and maintains upright orientation.
  */
 const DevOpsAtom = ({ theme }) => {
+    const desktopLeftOffset = '3%';
     const orbits = [
         {
             radius: 120,
@@ -39,6 +73,8 @@ const DevOpsAtom = ({ theme }) => {
             tools: [
                 { Icon: VscAzure, color: '#0078D4' },
                 { Icon: SiAmazonwebservices, color: '#FF9900' },
+                { Icon: GcpGradientIcon, color: '#4285F4' },
+                { Icon: SiGithub, color: theme.mode === 'dark' ? '#FFFFFF' : '#1A1A1A' },
                 { Icon: SiTerraform, color: '#7B42BC' }
             ],
             direction: 1 // Clockwise
@@ -48,7 +84,7 @@ const DevOpsAtom = ({ theme }) => {
     return (
         <div style={{
             position: 'absolute',
-            left: '8%',
+            left: desktopLeftOffset,
             top: '50%',
             transform: 'translateY(-50%)',
             width: '600px',
@@ -179,10 +215,28 @@ const Hero = ({ data }) => {
         }}>
             <IndustrialBackground type="home" />
 
+            {/* Bottom fade to blend Home into next panel */}
+            <div
+                style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    height: isMobile ? '120px' : '180px',
+                    // Use a mask so only `backgroundColor` needs to transition (prevents a bottom-first flash on theme toggle).
+                    backgroundColor: theme.primaryBg,
+                    WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1) 75%)',
+                    maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1) 75%)',
+                    pointerEvents: 'none',
+                    zIndex: 2
+                }}
+                aria-hidden="true"
+            />
+
             {/* DevOps Atom Cluster - Side-by-side in Landscape, Top in Portrait */}
             <div style={{
                 position: 'absolute',
-                left: isLandscape ? '1%' : (isMobile ? '50%' : '2%'),
+                left: isLandscape ? '0%' : (isMobile ? '50%' : '1%'),
                 top: isLandscape ? '50%' : (isMobile ? '20%' : '50%'),
                 transform: isLandscape ? 'translateY(-50%) scale(0.55)' : (isMobile ? 'translateX(-50%) scale(0.6)' : 'translateY(-50%)'),
                 opacity: isMobile ? 0.35 : 1,
@@ -268,10 +322,10 @@ const Hero = ({ data }) => {
                                 padding: '8px 20px',
                                 borderRadius: '50px',
                                 border: '1px solid rgba(255, 153, 0, 0.3)',
-                                fontSize: '0.9rem',
+                                fontSize: '1.01rem',
                                 color: theme.secondaryText
                             }}>
-                                <SiAmazonwebservices color="#FF9900" size={26} />
+                                <SiAmazonwebservices color="#FF9900" size={28} />
                                 <span>Certified in <span style={{ color: theme.primaryText, fontWeight: '700' }}>AWS Solution Architect Associate</span> (SAA-C03)</span>
                             </div>
                             <div style={{
@@ -283,10 +337,10 @@ const Hero = ({ data }) => {
                                 padding: '8px 20px',
                                 borderRadius: '50px',
                                 border: '1px solid rgba(0, 120, 212, 0.3)',
-                                fontSize: '0.9rem',
+                                fontSize: '1.01rem',
                                 color: theme.secondaryText
                             }}>
-                                <VscAzure color="#0078D4" size={24} />
+                                <VscAzure color="#0078D4" size={26} />
                                 <span>Certified in <span style={{ color: theme.primaryText, fontWeight: '700' }}>Azure Fundamentals</span> (AZ-900)</span>
                             </div>
                         </div>
@@ -386,19 +440,6 @@ const Hero = ({ data }) => {
                 </div>
             </div>
 
-            {/* Bottom Cinematic Transition */}
-            <div style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                width: '100%',
-                height: '300px',
-                background: theme.mode === 'dark' 
-                    ? 'linear-gradient(to top, #000 20%, transparent 100%)'
-                    : 'linear-gradient(to top, rgba(245, 245, 247, 0.5) 20%, transparent 100%)',
-                zIndex: 5,
-                pointerEvents: 'none'
-            }} />
         </section>
     );
 };

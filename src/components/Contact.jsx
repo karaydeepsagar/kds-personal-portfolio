@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Mail, Phone, Linkedin, Github, Send, Copy, Check } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import { useTheme } from '../context/ThemeContext';
-import IndustrialBackground from './IndustrialBackground';
 
 const Contact = ({ data }) => {
     const { theme } = useTheme();
@@ -11,7 +10,10 @@ const Contact = ({ data }) => {
     const [copied, setCopied] = useState(null);
     const [status, setStatus] = useState({ sending: false, sent: false, error: false });
     const [isMobile, setIsMobile] = useState(false);
-    const [formState, setFormState] = useState({ name: '', email: '' });
+    const [formState, setFormState] = useState({ name: '', email: '', company: '' });
+
+    // Centered infinity loop path (0..800 viewBox)
+    const infinityPath = 'M 200,200 C 200,100 350,100 400,200 C 450,300 600,300 600,200 C 600,100 450,100 400,200 C 350,300 200,300 200,200 Z';
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -44,6 +46,7 @@ const Contact = ({ data }) => {
             .then((result) => {
                 console.log(result.text);
                 setStatus({ sending: false, sent: true, error: false });
+                setFormState({ name: '', email: '', company: '' });
                 form.current.reset();
                 setTimeout(() => setStatus(s => ({ ...s, sent: false })), 5000);
             }, (error) => {
@@ -54,28 +57,6 @@ const Contact = ({ data }) => {
     };
 
     const isProjectDetailsEnabled = formState.name.trim().length > 0 && formState.email.trim().length > 0;
-
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1
-            }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { y: 20, opacity: 0 },
-        visible: {
-            y: 0,
-            opacity: 1,
-            transition: {
-                duration: 0.5,
-                ease: "easeOut"
-            }
-        }
-    };
 
     return (
         <section id="contact" style={{ position: 'relative', overflow: 'hidden' }}>
@@ -88,30 +69,19 @@ const Contact = ({ data }) => {
                     transition: opacity 0.2s ease;
                 }
             `}</style>
-            <IndustrialBackground type="contact" />
             <div className="section-padding" style={{ paddingLeft: '4%', paddingRight: '4%', minHeight: '100vh', background: 'transparent', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 {/* Heading outside the panel, similar to Industrial Insights */}
-                <motion.div
-                    variants={itemVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    style={{ textAlign: 'center', marginBottom: '40px' }}
-                >
+                <div style={{ textAlign: 'center', marginBottom: '40px' }}>
                     <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 800, color: theme.primaryText, marginBottom: '12px' }}>
-                        <span style={{ color: theme.accent }}>Let's</span> <span>Collaborate</span>
+                        <span>Let's</span> <span style={{ color: theme.accent }}>Collaborate</span>
                     </h2>
                     <p style={{ color: theme.mutedText, fontSize: '1rem', maxWidth: '680px', margin: '0 auto' }}>
                         Ready to elevate your infrastructure? I'm available for new opportunities in Cloud Architecture and DevOps engineering.
                     </p>
-                </motion.div>
+                </div>
 
-                <motion.div
+                <div
                     className="contact-container"
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
                     style={{
                         width: '100%',
                         maxWidth: '900px',
@@ -123,17 +93,92 @@ const Contact = ({ data }) => {
                         backdropFilter: 'blur(20px)',
                         borderRadius: '24px',
                         border: `1px solid ${theme.border}`,
-                        boxShadow: theme.cardShadow
+                        boxShadow: theme.cardShadow,
+                        position: 'relative',
+                        overflow: 'hidden'
                     }}
                 >
+                    {/* Nucleus glow centered INSIDE the contact tile */}
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            width: isMobile ? 'min(620px, 95%)' : 'min(820px, 92%)',
+                            height: isMobile ? 'min(620px, 95%)' : 'min(820px, 92%)',
+                            transform: 'translate(-50%, -50%)',
+                            transformOrigin: 'center',
+                            background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 72%)',
+                            borderRadius: '50%',
+                            filter: 'blur(125px)',
+                            opacity: theme.mode === 'dark' ? 0.22 : 0.14,
+                            pointerEvents: 'none',
+                            zIndex: 0
+                        }}
+                    />
+
+                    {/* Big infinity loop animation (centered in tile) */}
+                    <svg
+                        width={isMobile ? 'min(1200px, 145%)' : 'min(1600px, 150%)'}
+                        height={isMobile ? 'min(560px, 88%)' : 'min(760px, 92%)'}
+                        viewBox="0 0 800 400"
+                        preserveAspectRatio="xMidYMid meet"
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            filter: theme.mode === 'dark' ? 'blur(1.2px)' : 'blur(1px)',
+                            opacity: theme.mode === 'dark' ? 0.42 : 0.34,
+                            pointerEvents: 'none',
+                            zIndex: 0
+                        }}
+                        aria-hidden="true"
+                    >
+                        <motion.path
+                            d={infinityPath}
+                            fill="none"
+                            stroke={theme.border}
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            opacity={theme.mode === 'dark' ? 0.55 : 0.35}
+                        />
+                        <motion.path
+                            d={infinityPath}
+                            fill="none"
+                            stroke={theme.mode === 'dark' ? '#fff' : theme.mutedText}
+                            strokeWidth="3.6"
+                            strokeLinecap="butt"
+                            strokeLinejoin="round"
+                            strokeDasharray="28 92"
+                            animate={{ strokeDashoffset: [60, -180] }}
+                            transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+                            opacity={theme.mode === 'dark' ? 0.34 : 0.28}
+                        />
+                        <motion.path
+                            d={infinityPath}
+                            fill="none"
+                            stroke="var(--netflix-red)"
+                            strokeWidth="4.2"
+                            strokeLinecap="butt"
+                            strokeLinejoin="round"
+                            strokeDasharray="28 92"
+                            animate={{ strokeDashoffset: [0, -240] }}
+                            transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+                            opacity={theme.mode === 'dark' ? 0.42 : 0.36}
+                        />
+                    </svg>
+
                     {/* Contact Info Card */}
-                    <motion.div
-                        variants={itemVariants}
+                    <div
                         style={{
                             padding: 0,
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '1.5rem'
+                            gap: '1.5rem',
+                            position: 'relative',
+                            zIndex: 1
                         }}
                     >
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -221,13 +266,13 @@ const Contact = ({ data }) => {
                                 </a>
                             </div>
                         </div>
-                    </motion.div>
+                    </div>
 
                     {/* Form Card */}
-                    <motion.div
-                        variants={itemVariants}
+                    <div
                         style={{
-                            position: 'relative'
+                            position: 'relative',
+                            zIndex: 1
                         }}
                     >
                         <form
@@ -243,6 +288,12 @@ const Contact = ({ data }) => {
                                 border: 'none',
                             }}
                         >
+                            {/* EmailJS template compatibility fields (safe even if unused) */}
+                            <input type="hidden" name="from_name" value={formState.name} />
+                            <input type="hidden" name="reply_to" value={formState.email} />
+                            <input type="hidden" name="from_email" value={formState.email} />
+                            <input type="hidden" name="company" value={formState.company} />
+
                             <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem', color: theme.primaryText }}>Message Details</h3>
 
                             <div className="input-group">
@@ -280,6 +331,8 @@ const Contact = ({ data }) => {
                                     type="text"
                                     name="company_name"
                                     placeholder="Company Name"
+                                    value={formState.company}
+                                    onChange={(e) => setFormState(s => ({ ...s, company: e.target.value }))}
                                     style={{ width: '100%', padding: '16px', background: theme.secondaryBg, border: `1px solid ${theme.border}`, borderRadius: '12px', color: theme.primaryText, outline: 'none', fontSize: '1rem' }}
                                 />
                             </div>
@@ -318,8 +371,8 @@ const Contact = ({ data }) => {
                                 )}
                             </button>
                         </form>
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
             </div>
         </section>
     );

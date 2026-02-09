@@ -132,7 +132,6 @@ const icons = {
     'AI Tools': AiIcon
 };
 
-import IndustrialBackground from './IndustrialBackground';
 
 const Skills = ({ data }) => {
     const { theme } = useTheme();
@@ -149,7 +148,6 @@ const Skills = ({ data }) => {
 
     return (
         <section id="skills" style={{ position: 'relative', overflow: 'hidden' }}>
-            <IndustrialBackground type="skills" />
             <div className="section-padding" style={{ padding: isMobile ? '100px 15px 40px' : '100px 4% 80px', background: 'transparent' }}>
                 <h2 className="section-title" style={{ textAlign: 'center', marginBottom: isMobile ? '2.5rem' : '4rem', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '800', color: theme.primaryText }}>
                     <span style={{ color: theme.accent }}>Technical</span> Expertise
@@ -187,13 +185,18 @@ const Skills = ({ data }) => {
                                     animate={{
                                         scale: isHovered ? 1.2 : 1,
                                         rotate: isHovered ? -15 : 0,
-                                        opacity: isHovered ? 0.2 : 0.05
+                                        opacity: isHovered
+                                            ? (theme.mode === 'dark' ? 0.28 : 0.18)
+                                            : (theme.mode === 'dark' ? 0.11 : 0.07)
                                     }}
                                     style={{
                                         position: 'absolute',
                                         right: '-20px',
                                         bottom: '-20px',
                                         color: theme.accent,
+                                        filter: isHovered
+                                            ? `drop-shadow(0 0 26px ${theme.accent}3D)`
+                                            : `drop-shadow(0 0 18px ${theme.accent}26)`,
                                         zIndex: 0,
                                         pointerEvents: 'none'
                                     }}

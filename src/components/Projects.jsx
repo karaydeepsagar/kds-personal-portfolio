@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Github, ExternalLink, Code2 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-import IndustrialBackground from './IndustrialBackground';
 
 const Projects = ({ data }) => {
     const { theme } = useTheme();
@@ -17,8 +16,28 @@ const Projects = ({ data }) => {
 
     return (
         <section id="projects" style={{ position: 'relative', overflow: 'hidden' }}>
-            <IndustrialBackground type="projects" />
-            <div className="section-padding" style={{ padding: isMobile ? '100px 15px 40px' : '120px 6% 80px', background: 'transparent', minHeight: '100vh' }}>
+            {/* Nucleus glow (background) sized for this panel (RIGHT) */}
+            <motion.div
+                animate={{ opacity: [0.10, 0.18, 0.10], scale: [1, 1.08, 1] }}
+                transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: isMobile ? '50%' : '78%',
+                    width: 'min(980px, 78vw)',
+                    height: 'min(980px, 78vw)',
+                    x: '-50%',
+                    y: '-50%',
+                    transformOrigin: 'center',
+                    background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 72%)',
+                    borderRadius: '50%',
+                    filter: 'blur(130px)',
+                    opacity: theme.mode === 'dark' ? 0.22 : 0.14,
+                    pointerEvents: 'none',
+                    zIndex: 0
+                }}
+            />
+            <div className="section-padding" style={{ padding: isMobile ? '100px 15px 40px' : '120px 6% 80px', background: 'transparent', minHeight: '100vh', position: 'relative', zIndex: 1 }}>
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
