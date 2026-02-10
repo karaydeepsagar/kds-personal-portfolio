@@ -7,10 +7,12 @@ import { useTheme } from '../context/ThemeContext';
 const Contact = ({ data }) => {
     const { theme } = useTheme();
     const form = useRef();
+    const sectionRef = useRef(null);
     const [copied, setCopied] = useState(null);
     const [status, setStatus] = useState({ sending: false, sent: false, error: false });
     const [isMobile, setIsMobile] = useState(false);
     const [formState, setFormState] = useState({ name: '', email: '', company: '' });
+    const [isInView, setIsInView] = useState(true);
 
     // Centered infinity loop path (0..800 viewBox)
     const infinityPath = 'M 200,200 C 200,100 350,100 400,200 C 450,300 600,300 600,200 C 600,100 450,100 400,200 C 350,300 200,300 200,200 Z';
@@ -21,6 +23,20 @@ const Contact = ({ data }) => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    useEffect(() => {
+        const element = sectionRef.current;
+        if (!element || typeof IntersectionObserver === 'undefined') return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsInView(entry.isIntersecting),
+            { threshold: 0.1, rootMargin: '350px 0px' }
+        );
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, []);
+
+    const shouldLoop = isInView;
 
     const copyToClipboard = async (text, type) => {
         try {
@@ -59,7 +75,7 @@ const Contact = ({ data }) => {
     const isProjectDetailsEnabled = formState.name.trim().length > 0 && formState.email.trim().length > 0;
 
     return (
-        <section id="contact" style={{ position: 'relative', overflow: 'hidden' }}>
+        <section ref={sectionRef} id="contact" style={{ position: 'relative', overflow: 'hidden' }}>
             <style>{`
                 input::placeholder, textarea::placeholder {
                     opacity: 0.7;
@@ -152,8 +168,8 @@ const Contact = ({ data }) => {
                             strokeLinecap="butt"
                             strokeLinejoin="round"
                             strokeDasharray="28 92"
-                            animate={{ strokeDashoffset: [60, -180] }}
-                            transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+                            animate={shouldLoop ? { strokeDashoffset: [60, -180] } : { strokeDashoffset: 0 }}
+                            transition={shouldLoop ? { duration: 7, repeat: Infinity, ease: 'linear' } : undefined}
                             opacity={theme.mode === 'dark' ? 0.34 : 0.28}
                         />
                         <motion.path
@@ -164,8 +180,8 @@ const Contact = ({ data }) => {
                             strokeLinecap="butt"
                             strokeLinejoin="round"
                             strokeDasharray="28 92"
-                            animate={{ strokeDashoffset: [0, -240] }}
-                            transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+                            animate={shouldLoop ? { strokeDashoffset: [0, -240] } : { strokeDashoffset: 0 }}
+                            transition={shouldLoop ? { duration: 7, repeat: Infinity, ease: 'linear' } : undefined}
                             opacity={theme.mode === 'dark' ? 0.42 : 0.36}
                         />
                     </svg>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, Calendar, Building2, UserCircle, CheckCircle2 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
@@ -6,6 +6,8 @@ import { useTheme } from '../context/ThemeContext';
 const Experience = ({ data }) => {
     const { theme } = useTheme();
     const [isMobile, setIsMobile] = useState(false);
+    const sectionRef = useRef(null);
+    const [isInView, setIsInView] = useState(true);
 
     // Centered infinity loop path (occupies roughly x:200..600 in a 0..800 viewBox)
     const infinityPath = 'M 200,200 C 200,100 350,100 400,200 C 450,300 600,300 600,200 C 600,100 450,100 400,200 C 350,300 200,300 200,200 Z';
@@ -17,8 +19,22 @@ const Experience = ({ data }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    useEffect(() => {
+        const element = sectionRef.current;
+        if (!element || typeof IntersectionObserver === 'undefined') return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsInView(entry.isIntersecting),
+            { threshold: 0.1, rootMargin: '350px 0px' }
+        );
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, []);
+
+    const shouldLoop = isInView;
+
     return (
-        <section id="experience" style={{ position: 'relative', overflow: 'hidden' }}>
+        <section ref={sectionRef} id="experience" style={{ position: 'relative', overflow: 'hidden' }}>
             <div className="section-padding" style={{
                 padding: isMobile ? '100px 15px 40px' : '120px 6% 80px',
                 background: 'transparent',
@@ -70,8 +86,8 @@ const Experience = ({ data }) => {
                                 filter: theme.mode === 'dark' ? 'blur(1.4px)' : 'blur(1.1px)'
                             }}>
                                 <motion.div
-                                    animate={{ scale: [1, 1.12, 1], opacity: [0.30, 0.55, 0.30] }}
-                                    transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+                                    animate={shouldLoop ? { scale: [1, 1.12, 1], opacity: [0.30, 0.55, 0.30] } : false}
+                                    transition={shouldLoop ? { duration: 10, repeat: Infinity, ease: 'easeInOut' } : undefined}
                                     style={{
                                         position: 'absolute',
                                         top: '50%',
@@ -83,7 +99,8 @@ const Experience = ({ data }) => {
                                         transformOrigin: 'center',
                                         background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 75%)',
                                         borderRadius: '50%',
-                                        filter: 'blur(110px)'
+                                        filter: 'blur(110px)',
+                                        willChange: 'transform, opacity'
                                     }}
                                 />
 
@@ -117,8 +134,8 @@ const Experience = ({ data }) => {
                                         strokeLinecap="butt"
                                         strokeLinejoin="round"
                                         strokeDasharray="28 92"
-                                        animate={{ strokeDashoffset: [60, -180] }}
-                                        transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+                                        animate={shouldLoop ? { strokeDashoffset: [60, -180] } : { strokeDashoffset: 0 }}
+                                        transition={shouldLoop ? { duration: 7, repeat: Infinity, ease: 'linear' } : undefined}
                                         opacity={theme.mode === 'dark' ? 0.42 : 0.38}
                                     />
                                     <motion.path
@@ -129,8 +146,8 @@ const Experience = ({ data }) => {
                                         strokeLinecap="butt"
                                         strokeLinejoin="round"
                                         strokeDasharray="28 92"
-                                        animate={{ strokeDashoffset: [0, -240] }}
-                                        transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+                                        animate={shouldLoop ? { strokeDashoffset: [0, -240] } : { strokeDashoffset: 0 }}
+                                        transition={shouldLoop ? { duration: 7, repeat: Infinity, ease: 'linear' } : undefined}
                                         opacity={theme.mode === 'dark' ? 0.58 : 0.52}
                                     />
                                 </svg>

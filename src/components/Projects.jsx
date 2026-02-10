@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Github, ExternalLink, Code2 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
@@ -6,6 +6,8 @@ import { useTheme } from '../context/ThemeContext';
 const Projects = ({ data }) => {
     const { theme } = useTheme();
     const [isMobile, setIsMobile] = useState(false);
+    const sectionRef = useRef(null);
+    const [isInView, setIsInView] = useState(true);
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -14,12 +16,24 @@ const Projects = ({ data }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    useEffect(() => {
+        const element = sectionRef.current;
+        if (!element || typeof IntersectionObserver === 'undefined') return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsInView(entry.isIntersecting),
+            { threshold: 0.1, rootMargin: '300px 0px' }
+        );
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, []);
+
     return (
-        <section id="projects" style={{ position: 'relative', overflow: 'hidden' }}>
+        <section ref={sectionRef} id="projects" style={{ position: 'relative', overflow: 'hidden' }}>
             {/* Nucleus glow (background) sized for this panel (RIGHT) */}
             <motion.div
-                animate={{ opacity: [0.10, 0.18, 0.10], scale: [1, 1.08, 1] }}
-                transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
+                animate={isInView ? { opacity: [0.10, 0.18, 0.10], scale: [1, 1.08, 1] } : false}
+                transition={isInView ? { duration: 13, repeat: Infinity, ease: 'easeInOut' } : undefined}
                 style={{
                     position: 'absolute',
                     top: '50%',
@@ -33,6 +47,7 @@ const Projects = ({ data }) => {
                     borderRadius: '50%',
                     filter: 'blur(130px)',
                     opacity: theme.mode === 'dark' ? 0.22 : 0.14,
+                    willChange: 'transform, opacity',
                     pointerEvents: 'none',
                     zIndex: 0
                 }}

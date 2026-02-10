@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import {
     Cloud, Server, Database, Globe, Shield, Terminal,
@@ -15,6 +15,9 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
     const { theme } = useTheme();
     const [isMobile, setIsMobile] = useState(false);
     const [viewportWidth, setViewportWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1440);
+    const [isScrolling, setIsScrolling] = useState(false);
+    const scrollingRef = useRef(false);
+    const scrollTimeoutRef = useRef(null);
 
     useEffect(() => {
         const handleResize = () => {
@@ -24,6 +27,29 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
         handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // While the user is actively scrolling, avoid expensive paint effects.
+    useEffect(() => {
+        const onScroll = () => {
+            if (!scrollingRef.current) {
+                scrollingRef.current = true;
+                setIsScrolling(true);
+            }
+            if (scrollTimeoutRef.current) {
+                clearTimeout(scrollTimeoutRef.current);
+            }
+            scrollTimeoutRef.current = setTimeout(() => {
+                scrollingRef.current = false;
+                setIsScrolling(false);
+            }, 140);
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => {
+            window.removeEventListener('scroll', onScroll);
+            if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+        };
     }, []);
 
     // Technical Expertise (skills) panel should not have the right-side animation/background.
@@ -234,7 +260,7 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                         opacity: homeBoost
                             ? (theme.mode === 'dark' ? 0.46 : 0.38)
                             : (theme.mode === 'dark' ? 0.32 : 0.26),
-                        filter: homeBoost ? `drop-shadow(0 0 16px ${theme.accent}22)` : 'none',
+                        filter: homeBoost && !isScrolling ? `drop-shadow(0 0 16px ${theme.accent}22)` : 'none',
                         zIndex: 0
                     }}
                 >
@@ -390,16 +416,10 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                                 animate={{
                                     rotate: [-(initialRotation), -(initialRotation + 360)], // Counter-rotate at matching speed
                                     scale: [1, 1.1, 1],
-                                    filter: [
-                                        `drop-shadow(0 0 10px ${idx % 2 === 0 ? 'var(--netflix-red)' : secondaryColor}66)`,
-                                        `drop-shadow(0 0 25px ${idx % 2 === 0 ? 'var(--netflix-red)' : secondaryColor})`,
-                                        `drop-shadow(0 0 10px ${idx % 2 === 0 ? 'var(--netflix-red)' : secondaryColor}66)`
-                                    ]
                                 }}
                                 transition={{
                                     rotate: { duration: orbitSpeed, repeat: Infinity, ease: "linear" },
                                     scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                                    filter: { duration: 3, repeat: Infinity, ease: "easeInOut" }
                                 }}
                                 style={{
                                     position: 'absolute',
@@ -408,7 +428,12 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    top: '-25px' // Half of icon size to center on orbit line
+                                    top: '-25px', // Half of icon size to center on orbit line
+                                    // Static drop-shadow is much cheaper than animating `filter`.
+                                    filter: isScrolling
+                                        ? 'none'
+                                        : `drop-shadow(0 0 16px ${idx % 2 === 0 ? 'var(--netflix-red)' : secondaryColor}66)`,
+                                    willChange: 'transform'
                                 }}
                             >
                                 <Icon size={50} strokeWidth={1} />
