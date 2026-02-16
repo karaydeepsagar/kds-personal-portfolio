@@ -82,6 +82,7 @@ const Projects = ({ data }) => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1, duration: 0.5 }}
+                            whileHover={{ y: -10 }}
                             style={{
                                 background: theme.cardBg,
                                 borderRadius: '24px',
@@ -90,16 +91,17 @@ const Projects = ({ data }) => {
                                 backdropFilter: 'blur(20px)',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                boxShadow: theme.cardShadow
+                                boxShadow: theme.cardShadow,
+                                cursor: 'default'
                             }}
                         >
                             <div style={{ height: '220px', overflow: 'hidden', position: 'relative' }}>
-                                <img
+                                <motion.img
                                     src={project.image}
                                     alt={project.title}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }}
-                                    onMouseOver={(e) => e.target.style.transform = 'scale(1.1)'}
-                                    onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    whileHover={{ scale: 1.1 }}
+                                    transition={{ duration: 0.5 }}
                                 />
                                 <div style={{
                                     position: 'absolute',
@@ -115,15 +117,16 @@ const Projects = ({ data }) => {
                             </div>
 
                             <div style={{ padding: '30px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '15px', color: theme.primaryText }}>{project.title}</h3>
-                                <p style={{ color: theme.mutedText, marginBottom: '25px', lineHeight: '1.6', fontSize: '0.95rem', flex: 1 }}>
+                                <h3 style={{ fontSize: '1.6rem', fontWeight: '800', marginBottom: '15px', color: theme.primaryText }}>{project.title}</h3>
+                                {/* Changed color to primaryText for higher contrast (white in dark mode) */}
+                                <p style={{ color: theme.primaryText, marginBottom: '25px', lineHeight: '1.6', fontSize: '1rem', flex: 1 }}>
                                     {project.description}
                                 </p>
 
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '30px' }}>
                                     {project.technologies.map((tech, i) => (
                                         <span key={i} style={{
-                                            fontSize: '0.75rem',
+                                            fontSize: '0.85rem',
                                             padding: '6px 14px',
                                             background: `${theme.accent}1A`,
                                             color: theme.accent,

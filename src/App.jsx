@@ -12,6 +12,7 @@ import Education from './components/Education';
 import Contact from './components/Contact';
 import Projects from './components/Projects';
 import Blog from './components/Blog';
+import PremiumEffects from './components/PremiumEffects';
 import { portfolioData } from './data/portfolioData';
 
 const AppContent = () => {
@@ -19,6 +20,7 @@ const AppContent = () => {
 
     return (
         <div className="App" style={{ backgroundColor: theme.primaryBg, minHeight: '100vh', transition: 'background-color 0.3s ease' }}>
+            <PremiumEffects />
             <Navbar />
             <Hero data={portfolioData.personalInfo} />
             <Projects data={portfolioData.projects} />
@@ -44,6 +46,13 @@ const AppContent = () => {
 
 function App() {
     const [showIntro, setShowIntro] = useState(true);
+
+    // Initial Viewport Scaling (90% default on laptops)
+    React.useEffect(() => {
+        if (window.innerWidth > 1024) {
+            document.body.style.zoom = "90%";
+        }
+    }, []);
 
     return (
         <ErrorBoundary>

@@ -107,10 +107,12 @@ const DevOpsAtom = ({ theme }) => {
                 style={{
                     width: '100px',
                     height: '100px',
-                    background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 75%)',
+                    // Use a slightly darker red and reduce spread for a more contained "core" look
+                    background: 'radial-gradient(circle, #b9090b 0%, transparent 70%)',
                     borderRadius: '50%',
                     position: 'absolute',
-                    zIndex: 0
+                    zIndex: 0,
+                    opacity: 0.8 // Slightly reduced base opacity
                 }}
             />
 
@@ -215,30 +217,12 @@ const Hero = ({ data }) => {
         }}>
             <IndustrialBackground type="home" />
 
-            {/* Bottom fade to blend Home into next panel */}
-            <div
-                style={{
-                    position: 'absolute',
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    height: isMobile ? '120px' : '180px',
-                    // Use a mask so only `backgroundColor` needs to transition (prevents a bottom-first flash on theme toggle).
-                    backgroundColor: theme.primaryBg,
-                    WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1) 75%)',
-                    maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1) 75%)',
-                    pointerEvents: 'none',
-                    zIndex: 2
-                }}
-                aria-hidden="true"
-            />
-
             {/* DevOps Atom Cluster - Side-by-side in Landscape, Top in Portrait */}
             <div style={{
                 position: 'absolute',
                 left: isLandscape ? '0%' : (isMobile ? '50%' : '1%'),
                 top: isLandscape ? '50%' : (isMobile ? '20%' : '50%'),
-                transform: isLandscape ? 'translateY(-50%) scale(0.55)' : (isMobile ? 'translateX(-50%) scale(0.6)' : 'translateY(-50%)'),
+                transform: isLandscape ? 'translateY(-50%) scale(0.55)' : (isMobile ? 'translateX(-50%) scale(0.59)' : 'translateY(-50%) scale(0.97)'),
                 opacity: isMobile ? 0.35 : 1,
                 transition: 'all 0.5s ease'
             }}>
@@ -251,8 +235,10 @@ const Hero = ({ data }) => {
                 width: '100%',
                 display: 'flex',
                 justifyContent: isLandscape ? 'flex-end' : 'center',
-                padding: isMobile ? '0 15px' : '0 4%',
-                paddingRight: isLandscape ? '5%' : (isMobile ? '15px' : '4%')
+                paddingLeft: isMobile ? '15px' : '4%',
+                paddingRight: isLandscape ? '5%' : (isMobile ? '15px' : '4%'),
+                // Push content down on desktop to avoid nav overlap while keeping it roughly centered
+                marginTop: isMobile ? '40px' : '100px'
             }}>
                 <div style={{
                     maxWidth: isLandscape ? '60%' : '1000px',
@@ -265,7 +251,7 @@ const Hero = ({ data }) => {
                     >
                         {/* Name Headline - Professional Center Alignment */}
                         <h1 style={{
-                            fontSize: 'clamp(2.5rem, 5vw, 4.2rem)',
+                            fontSize: 'clamp(2.35rem, 4.7vw, 3.95rem)', // Decreased by ~6%
                             fontWeight: '900',
                             color: theme.accent,
                             lineHeight: '1.05',
@@ -282,17 +268,21 @@ const Hero = ({ data }) => {
                             justifyContent: isLandscape ? 'flex-start' : 'center',
                             marginBottom: '20px'
                         }}>
-                            <div style={{
-                                display: 'inline-block',
-                                background: theme.mode === 'dark' ? 'rgba(20, 20, 20, 0.85)' : 'rgba(255, 255, 255, 0.9)',
-                                backdropFilter: 'blur(15px)',
-                                border: `1px solid ${theme.borderAccent}`,
-                                padding: '8px 25px',
-                                borderRadius: '50px',
-                                boxShadow: theme.cardShadow
-                            }}>
+                            <motion.div
+                                whileHover={{ y: -5 }}
+                                style={{
+                                    display: 'inline-block',
+                                    background: theme.mode === 'dark' ? 'rgba(20, 20, 20, 0.85)' : 'rgba(255, 255, 255, 0.9)',
+                                    backdropFilter: 'blur(15px)',
+                                    border: `1px solid ${theme.borderAccent}`,
+                                    padding: '8px 25px',
+                                    borderRadius: '50px',
+                                    boxShadow: theme.cardShadow,
+                                    cursor: 'default'
+                                }}
+                            >
                                 <span style={{
-                                    fontSize: 'clamp(0.8rem, 1.2vw, 1.1rem)',
+                                    fontSize: 'clamp(0.75rem, 1.13vw, 1.03rem)', // Decreased by ~6%
                                     fontWeight: '700',
                                     color: theme.primaryText,
                                     textTransform: 'uppercase',
@@ -302,7 +292,7 @@ const Hero = ({ data }) => {
                                     <span style={{ color: theme.accent, margin: '0 15px' }}>|</span>
                                     DevOps Engineer
                                 </span>
-                            </div>
+                            </motion.div>
                         </div>
 
                         {/* Certifications Row - Professional Alignment */}
@@ -322,10 +312,10 @@ const Hero = ({ data }) => {
                                 padding: '8px 20px',
                                 borderRadius: '50px',
                                 border: '1px solid rgba(255, 153, 0, 0.3)',
-                                fontSize: '1.01rem',
+                                fontSize: '0.95rem', // Decreased by ~6%
                                 color: theme.secondaryText
                             }}>
-                                <SiAmazonwebservices color="#FF9900" size={28} />
+                                <SiAmazonwebservices color="#FF9900" size={26} />
                                 <span>Certified in <span style={{ color: theme.primaryText, fontWeight: '700' }}>AWS Solution Architect Associate</span> (SAA-C03)</span>
                             </div>
                             <div style={{
@@ -337,7 +327,7 @@ const Hero = ({ data }) => {
                                 padding: '8px 20px',
                                 borderRadius: '50px',
                                 border: '1px solid rgba(0, 120, 212, 0.3)',
-                                fontSize: '1.01rem',
+                                fontSize: '0.95rem', // Decreased by ~6%
                                 color: theme.secondaryText
                             }}>
                                 <VscAzure color="#0078D4" size={26} />
@@ -347,7 +337,7 @@ const Hero = ({ data }) => {
 
                         {/* Description Paragraph - Smaller Font, Centered, High Impact 4-Line */}
                         <div style={{
-                            fontSize: 'clamp(0.85rem, 1.3vw, 1.15rem)',
+                            fontSize: 'clamp(0.8rem, 1.22vw, 1.08rem)', // Decreased by ~6%
                             lineHeight: '1.6',
                             color: theme.secondaryText,
                             maxWidth: '750px',
@@ -363,7 +353,7 @@ const Hero = ({ data }) => {
                             border: `1px solid ${theme.border}`,
                             boxShadow: theme.cardShadow
                         }}>
-                            <p style={{ marginBottom: '6px', fontSize: '1.2rem', fontWeight: '400', color: theme.primaryText, letterSpacing: '1px' }}>
+                            <p style={{ marginBottom: '6px', fontSize: '1.13rem', fontWeight: '400', color: theme.primaryText, letterSpacing: '1px' }}>
                                 Transforming <span style={{ color: theme.accent, fontWeight: '700' }}>Infrastructure</span> into Excellence
                             </p>
                             <p style={{ marginBottom: '6px', lineHeight: '1.5' }}><span style={{ color: theme.accent, fontWeight: '700' }}>5+</span> years architecting resilient <span style={{ fontWeight: '700' }}>multi-cloud</span> <span style={{ fontWeight: '700' }}>ecosystems</span> on <span style={{ color: theme.accent, fontWeight: '700' }}>AWS</span>, <span style={{ color: theme.accent, fontWeight: '700' }}>Azure</span>, and <span style={{ color: theme.accent, fontWeight: '700' }}>GCP</span>.</p>

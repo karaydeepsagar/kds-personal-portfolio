@@ -106,13 +106,13 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
     const homeBoost = type === 'home';
 
     // Home right-side infinity should scale up gently on larger screens
-    // between (740×370, scale 0.95) and (850×425, scale 1.05)
+    // Reduced by ~8% as requested
     const homeInfinityT = Math.max(0, Math.min(1, (viewportWidth - 1024) / (1600 - 1024)));
-    const homeInfinityWidthPx = Math.round(740 + (850 - 740) * homeInfinityT);
-    const homeInfinityHeightPx = Math.round(370 + (425 - 370) * homeInfinityT);
-    const homeInfinityScaleValue = 0.95 + (1.05 - 0.95) * homeInfinityT;
+    const homeInfinityWidthPx = Math.round(653 + (751 - 653) * homeInfinityT);
+    const homeInfinityHeightPx = Math.round(327 + (375 - 327) * homeInfinityT);
+    const homeInfinityScaleValue = 0.84 + (0.93 - 0.84) * homeInfinityT;
     // For Professional Journey: make ring + nucleus + infinity larger, but keep circulating icons the same size.
-    const ringMaxSize = experienceBoost ? '900px' : '700px';
+    const ringMaxSize = experienceBoost ? '900px' : '616px';
     const ringScale = experienceBoost ? 1.18 : 1;
     const desktopClusterRight = experienceBoost ? '-10%' : '-15%';
 
@@ -122,8 +122,8 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
     const infinityScale = experienceBoost ? 1.05 : (homeBoost ? homeInfinityScaleValue : 0.97);
 
     const ambientOnly = variant === 'ambient';
-    const ambientOpacity = theme.mode === 'dark' ? 0.26 : 0.18;
-    const ambientBlur = theme.mode === 'dark' ? 'blur(1.4px)' : 'blur(1.1px)';
+    const ambientOpacity = theme.mode === 'dark' ? 0.26 : 0.12;
+    const ambientBlur = theme.mode === 'dark' ? 'blur(1.4px)' : 'blur(0.8px)';
 
     if (ambientOnly) {
         const glowSize = isMobile ? 'min(560px, 92vw)' : 'min(820px, 76vw)';
@@ -148,71 +148,71 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                     alignItems: 'center',
                     justifyContent: 'center'
                 }}>
-                {/* Center nucleus glow (blurred) */}
-                <motion.div
-                    animate={{ scale: [1, 1.12, 1], opacity: [0.35, 0.6, 0.35] }}
-                    transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-                    style={{
-                        position: 'absolute',
-                        width: glowSize,
-                        height: glowSize,
-                        background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 75%)',
-                        borderRadius: '50%',
-                        filter: `blur(110px) ${ambientBlur}`,
-                        opacity: ambientOpacity,
-                        zIndex: 0
-                    }}
-                />
+                    {/* Center nucleus glow (blurred) */}
+                    <motion.div
+                        animate={{ scale: [1, 1.12, 1], opacity: [0.35, 0.6, 0.35] }}
+                        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+                        style={{
+                            position: 'absolute',
+                            width: glowSize,
+                            height: glowSize,
+                            background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 75%)',
+                            borderRadius: '50%',
+                            filter: `blur(110px) ${ambientBlur}`,
+                            opacity: ambientOpacity,
+                            zIndex: 0
+                        }}
+                    />
 
-                {/* Center infinity loop (blurred) */}
-                <svg
-                    width={loopWidth}
-                    height={loopHeight}
-                    viewBox="0 0 800 400"
-                    preserveAspectRatio="xMidYMid meet"
-                    style={{
-                        position: 'absolute',
-                        transform: 'scale(1.08)',
-                        opacity: theme.mode === 'dark' ? 0.34 : 0.22,
-                        filter: ambientBlur,
-                        zIndex: 1
-                    }}
-                >
-                    <motion.path
-                        d={infinityPath}
-                        fill="none"
-                        stroke={secondaryColor}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        opacity={theme.mode === 'dark' ? 0.55 : 0.35}
-                    />
-                    {/* Higher-intensity highlight in dark mode; muted grey in light mode */}
-                    <motion.path
-                        d={infinityPath}
-                        fill="none"
-                        stroke={theme.mode === 'dark' ? '#fff' : theme.mutedText}
-                        strokeWidth="3.6"
-                        strokeLinecap="butt"
-                        strokeLinejoin="round"
-                        strokeDasharray="28 92"
-                        animate={{ strokeDashoffset: [60, -180] }}
-                        transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
-                        opacity={theme.mode === 'dark' ? 0.42 : 0.38}
-                    />
-                    <motion.path
-                        d={infinityPath}
-                        fill="none"
-                        stroke={mainColor}
-                        strokeWidth="4.2"
-                        strokeLinecap="butt"
-                        strokeLinejoin="round"
-                        strokeDasharray="28 92"
-                        animate={{ strokeDashoffset: [0, -240] }}
-                        transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
-                        opacity={theme.mode === 'dark' ? 0.58 : 0.52}
-                    />
-                </svg>
+                    {/* Center infinity loop (blurred) */}
+                    <svg
+                        width={loopWidth}
+                        height={loopHeight}
+                        viewBox="0 0 800 400"
+                        preserveAspectRatio="xMidYMid meet"
+                        style={{
+                            position: 'absolute',
+                            transform: 'scale(1.08)',
+                            opacity: theme.mode === 'dark' ? 0.34 : 0.22,
+                            filter: ambientBlur,
+                            zIndex: 1
+                        }}
+                    >
+                        <motion.path
+                            d={infinityPath}
+                            fill="none"
+                            stroke={secondaryColor}
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            opacity={theme.mode === 'dark' ? 0.55 : 0.35}
+                        />
+                        {/* Higher-intensity highlight in dark mode; muted grey in light mode */}
+                        <motion.path
+                            d={infinityPath}
+                            fill="none"
+                            stroke={theme.mode === 'dark' ? '#fff' : '#94a3b8'}
+                            strokeWidth="3.6"
+                            strokeLinecap="butt"
+                            strokeLinejoin="round"
+                            strokeDasharray="28 92"
+                            animate={{ strokeDashoffset: [60, -180] }}
+                            transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+                            opacity={theme.mode === 'dark' ? 0.42 : 0.38}
+                        />
+                        <motion.path
+                            d={infinityPath}
+                            fill="none"
+                            stroke={mainColor}
+                            strokeWidth="4.2"
+                            strokeLinecap="butt"
+                            strokeLinejoin="round"
+                            strokeDasharray="28 92"
+                            animate={{ strokeDashoffset: [0, -240] }}
+                            transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+                            opacity={theme.mode === 'dark' ? 0.58 : 0.52}
+                        />
+                    </svg>
                 </div>
             </div>
         );
@@ -258,8 +258,8 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                             ? `scale(${Math.max(infinityScale, 1.12)})`
                             : `translateY(-50%) scale(${infinityScale})`,
                         opacity: homeBoost
-                            ? (theme.mode === 'dark' ? 0.46 : 0.38)
-                            : (theme.mode === 'dark' ? 0.32 : 0.26),
+                            ? (theme.mode === 'dark' ? 0.46 : 0.25)
+                            : (theme.mode === 'dark' ? 0.32 : 0.15),
                         filter: homeBoost && !isScrolling ? `drop-shadow(0 0 16px ${theme.accent}22)` : 'none',
                         zIndex: 0
                     }}
@@ -279,7 +279,7 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                     <motion.path
                         d={infinityPath}
                         fill="none"
-                        stroke="#fff"
+                        stroke={theme.mode === 'dark' ? '#fff' : '#94a3b8'}
                         strokeWidth={homeBoost ? '3.9' : '3.5'}
                         strokeLinecap="butt"
                         strokeLinejoin="round"
@@ -356,7 +356,8 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                             height: '70%',
                             background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 75%)',
                             borderRadius: '50%',
-                            filter: 'blur(100px)',
+                            filter: theme.mode === 'dark' ? 'blur(100px)' : 'blur(80px)',
+                            opacity: theme.mode === 'dark' ? 1 : 0.5,
                             zIndex: -1
                         }}
                     />
@@ -389,7 +390,7 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                 {icons.map((Icon, idx) => {
                     // Home: place icons between the outer orbit ring and the infinity loop.
                     // Other panels keep the tighter orbit.
-                    const orbitRadius = homeBoost ? 270 : 235;
+                    const orbitRadius = homeBoost ? 239 : 235;
                     const orbitSpeed = 30; // Faster, synchronized with tech ring
                     // Ensure perfect geometrical spacing (72 degrees for 5 icons)
                     const initialRotation = idx * (360 / icons.length);
@@ -406,7 +407,8 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                             style={{
                                 position: 'absolute',
                                 top: '50%',
-                                left: '50%',
+                                // Shift pivot right by ~8% for Home to move icons towards infinity loop
+                                left: homeBoost ? '54%' : '50%',
                                 width: '1px', // Pivot point
                                 height: '1px',
                                 zIndex: 2

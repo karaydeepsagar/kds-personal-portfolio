@@ -56,12 +56,13 @@ const DSKIntro = ({ onComplete }) => {
                 }}
                 transition={{
                     opacity: { duration: 1 },
-                    backgroundPosition: { duration: 5, repeat: Infinity, ease: "linear" }
+                    backgroundPosition: { duration: 3, repeat: Infinity, ease: "linear" }
                 }}
                 style={{
                     position: 'absolute',
                     inset: 0,
-                    background: `linear-gradient(135deg, ${theme.accent} 0%, ${theme.primaryBg} 25%, rgba(255, 255, 255, 0.3) 50%, ${theme.accentHover} 75%, ${theme.primaryBg} 100%)`,
+                    // SEQUENCE: Red -> Grey -> White -> Black
+                    background: 'linear-gradient(135deg, #b9090b 0%, #757575 35%, #ffffff 60%, #000000 100%)',
                     backgroundSize: '400% 400%',
                     zIndex: 1
                 }}

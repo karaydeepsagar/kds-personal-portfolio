@@ -54,6 +54,7 @@ const Education = ({ data }) => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: '-80px' }}
                             transition={{ duration: 0.55, delay: idx * 0.05 }}
+                            whileHover={{ y: -5 }}
                             style={{
                                 background: theme.mode === 'dark' ? theme.cardBg : theme.glassBg,
                                 backdropFilter: theme.mode === 'dark' ? 'blur(20px)' : 'blur(16px)',
@@ -65,7 +66,10 @@ const Education = ({ data }) => {
                                 position: 'relative',
                                 overflow: 'hidden',
                                 display: 'flex',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                cursor: 'default',
+                                userSelect: 'none',
+                                transform: 'translateZ(0)' // Fixes backdrop-filter rendering glitches
                             }}
                         >
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '18px', flexWrap: 'wrap', width: '100%' }}>

@@ -70,7 +70,8 @@ const Experience = ({ data }) => {
                                 borderRadius: '32px',
                                 padding: 'clamp(20px, 5vw, 50px)',
                                 border: `1px solid ${theme.border}`,
-                                boxShadow: theme.cardShadow,
+                                // Only left and right glow: 0px vertical offset, no general shadow
+                                boxShadow: `-15px 0 40px -10px ${theme.accent}55, 15px 0 40px -10px ${theme.accent}55`,
                                 position: 'relative',
                                 overflow: 'hidden',
                                 width: '100%' // Wide screen layout

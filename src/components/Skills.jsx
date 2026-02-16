@@ -85,35 +85,24 @@ const CiCdIcon = ({ size = 24 }) => (
     </svg>
 );
 
-// Custom Infrastructure as Code icon approximating a cloud with code and two connected nodes
+// Custom Infrastructure as Code icon: Gear with code brackets
 const IaCIcon = ({ size = 24 }) => (
     <svg
         width={size}
         height={size}
-        viewBox="0 0 64 64"
+        viewBox="0 0 24 24"
         fill="none"
-        xmlns="http://www.w3.org/2000/svg"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
     >
-        {/* Cloud */}
-        <path
-            d="M18 30C18 24 22.5 20 28 20C29.5 16 33 14 36.5 14C42 14 46 18 47 23C51 23.5 54 27 54 31.5C54 36.5 50 40 45 40H23C20 40 18 38 18 35.5C18 33.5 19 31.5 21 30.5"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        />
-        {/* Code circle */}
-        <circle cx="32" cy="30" r="8" fill="none" stroke="currentColor" strokeWidth="3" />
-        <path d="M29 27L27 30L29 33" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M35 27L37 30L35 33" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M31 34L33 26" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-        {/* Bottom connector and nodes */}
-        <line x1="32" y1="38" x2="32" y2="44" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-        <circle cx="32" cy="46.5" r="3" stroke="currentColor" strokeWidth="3" />
-        <line x1="29" y1="46.5" x2="18" y2="46.5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-        <line x1="35" y1="46.5" x2="46" y2="46.5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-        <rect x="10" y="44" width="10" height="7" rx="1.5" stroke="currentColor" strokeWidth="3" />
-        <rect x="44" y="44" width="10" height="7" rx="1.5" stroke="currentColor" strokeWidth="3" />
+        {/* Gear body */}
+        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.72l-.15.1a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.72l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+        {/* Code brackets inside */}
+        <polyline points="9 9 6 12 9 15" />
+        <polyline points="15 9 18 12 15 15" />
+        <line x1="14" y1="8" x2="10" y2="16" />
     </svg>
 );
 
@@ -167,6 +156,7 @@ const Skills = ({ data }) => {
                                 transition={{ delay: index * 0.1 }}
                                 onHoverStart={() => setHoveredCategory(category)}
                                 onHoverEnd={() => setHoveredCategory(null)}
+                                whileHover={{ y: -10 }}
                                 style={{
                                     position: 'relative',
                                     borderRadius: '20px',
@@ -177,7 +167,7 @@ const Skills = ({ data }) => {
                                     minHeight: '220px',
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    transition: 'all 0.4s ease'
+                                    cursor: 'default'
                                 }}
                             >
                                 {/* Background Icon Watermark */}

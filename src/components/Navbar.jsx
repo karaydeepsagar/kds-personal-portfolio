@@ -81,17 +81,23 @@ const Navbar = () => {
             }}
         >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1400px', margin: '0 auto' }}>
-                <div
+                <motion.div
                     onClick={() => scrollToSection('home')}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}
                 >
                     <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
                         {/* Left Gear */}
-                        <circle cx="35" cy="50" r="18" fill="none" stroke={theme.accent} strokeWidth="3.5" />
-                        <circle cx="35" cy="50" r="28" fill="none" stroke={theme.accent} strokeWidth="3" strokeDasharray="8,4" opacity="0.6" />
+                        <motion.g animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}>
+                            <circle cx="35" cy="50" r="18" fill="none" stroke={theme.accent} strokeWidth="3.5" />
+                            <circle cx="35" cy="50" r="28" fill="none" stroke={theme.accent} strokeWidth="3" strokeDasharray="8,4" opacity="0.6" />
+                        </motion.g>
                         {/* Right Gear */}
-                        <circle cx="65" cy="50" r="18" fill="none" stroke={theme.accent} strokeWidth="3.5" />
-                        <circle cx="65" cy="50" r="28" fill="none" stroke={theme.accent} strokeWidth="3" strokeDasharray="8,4" opacity="0.6" />
+                        <motion.g animate={{ rotate: -360 }} transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}>
+                            <circle cx="65" cy="50" r="18" fill="none" stroke={theme.accent} strokeWidth="3.5" />
+                            <circle cx="65" cy="50" r="28" fill="none" stroke={theme.accent} strokeWidth="3" strokeDasharray="8,4" opacity="0.6" />
+                        </motion.g>
                         {/* Connecting element */}
                         <line x1="53" y1="50" x2="47" y2="50" stroke={theme.accent} strokeWidth="2" />
                     </svg>
@@ -104,7 +110,7 @@ const Navbar = () => {
                     }}>
                         DSK<span style={{ color: theme.primaryText }}>.</span>
                     </h1>
-                </div>
+                </motion.div>
 
                 {/* Theme Toggle */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
