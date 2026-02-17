@@ -44,8 +44,17 @@ const GcpGradientIcon = ({ size = 24 }) => (
  * DevOpsAtom: Upgraded with 3D-simulated kinetic orbits.
  * Ensures consistent spacing between icons and maintains upright orientation.
  */
-const DevOpsAtom = ({ theme }) => {
+const DevOpsAtom = ({ theme, isActive = true }) => {
     const desktopLeftOffset = '3%';
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     const orbits = [
         {
             radius: 120,
@@ -94,31 +103,32 @@ const DevOpsAtom = ({ theme }) => {
             perspective: '1200px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            opacity: isActive ? 1 : 0
         }}>
             {/* Core Nucleus Pulse */}
-            <motion.div
-                animate={{
-                    scale: [1, 1.4, 1],
-                    opacity: [0.3, 0.6, 0.3],
-                    filter: ['blur(20px)', 'blur(35px)', 'blur(20px)']
-                }}
-                transition={{ duration: 4, repeat: Infinity }}
-                style={{
-                    width: '100px',
-                    height: '100px',
-                    // Use a slightly darker red and reduce spread for a more contained "core" look
-                    background: 'radial-gradient(circle, #b9090b 0%, transparent 70%)',
-                    borderRadius: '50%',
-                    position: 'absolute',
-                    zIndex: 0,
-                    opacity: 0.8 // Slightly reduced base opacity
-                }}
-            />
+            {isActive && (
+                <motion.div
+                    animate={{
+                        scale: [1, 1.4, 1],
+                        opacity: [0.3, 0.6, 0.3],
+                        filter: isMobile ? ['blur(10px)', 'blur(20px)', 'blur(10px)'] : ['blur(20px)', 'blur(35px)', 'blur(20px)']
+                    }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                    style={{
+                        width: '100px',
+                        height: '100px',
+                        background: 'radial-gradient(circle, #b9090b 0%, transparent 70%)',
+                        borderRadius: '50%',
+                        position: 'absolute',
+                        zIndex: 0,
+                        opacity: 0.8
+                    }}
+                />
+            )}
 
-            {orbits.map((orbit, orbitIdx) => (
+            {isActive && orbits.map((orbit, orbitIdx) => (
                 <div key={orbitIdx} style={{ position: 'absolute', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {/* The Visual Orbit Strip */}
                     <motion.div
                         animate={{ rotate: 360 * orbit.direction }}
                         transition={{ duration: orbit.speed, repeat: Infinity, ease: "linear" }}
@@ -128,14 +138,13 @@ const DevOpsAtom = ({ theme }) => {
                             height: orbit.radius * 2,
                             borderRadius: '50%',
                             border: `1px solid ${theme.border}`,
-                            borderTop: `2px solid ${orbitIdx % 2 === 0 ? theme.accent : (theme.mode === 'dark' ? theme.primaryText : theme.mutedText)}`,
-                            borderBottom: `2px solid ${orbitIdx % 2 === 0 ? (theme.mode === 'dark' ? theme.primaryText : theme.mutedText) : theme.accent}`,
-                            opacity: theme.mode === 'dark' ? 0.3 : 0.5,
-                            boxShadow: theme.mode === 'dark' ? `0 0 20px ${theme.accent}1A` : `0 0 15px ${theme.accent}33`
+                            borderTop: `${isMobile ? '3px' : '4px'} solid ${orbitIdx % 2 === 0 ? theme.accent : (theme.mode === 'dark' ? theme.primaryText : theme.mutedText)}`,
+                            borderBottom: `${isMobile ? '3px' : '4px'} solid ${orbitIdx % 2 === 0 ? (theme.mode === 'dark' ? theme.primaryText : theme.mutedText) : theme.accent}`,
+                            opacity: theme.mode === 'dark' ? 0.65 : 0.75,
+                            boxShadow: isMobile ? 'none' : (theme.mode === 'dark' ? `0 0 30px ${theme.accent}33` : `0 0 20px ${theme.accent}4d`)
                         }}
                     />
 
-                    {/* Icons Rotating along the Strip */}
                     {orbit.tools.map((tool, toolIdx) => {
                         const angle = toolIdx * (360 / orbit.tools.length);
                         return (
@@ -159,20 +168,18 @@ const DevOpsAtom = ({ theme }) => {
                                     <motion.div
                                         animate={{
                                             rotate: [-(angle + 0), -(angle + 360 * orbit.direction)],
-                                            scale: [0.8, 1.1, 0.8],
-                                            opacity: 1
+                                            scale: [0.8, 1.1, 0.8]
                                         }}
                                         transition={{
                                             rotate: { duration: orbit.speed, repeat: Infinity, ease: "linear" },
-                                            scale: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-                                            opacity: { duration: 0 }
+                                            scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }
                                         }}
                                         style={{
                                             color: tool.color,
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            filter: `drop-shadow(0 0 10px ${tool.color}44)`
+                                            filter: isMobile ? 'none' : `drop-shadow(0 0 10px ${tool.color}44)`
                                         }}
                                     >
                                         <tool.Icon size={38} />
@@ -191,6 +198,8 @@ const Hero = ({ data }) => {
     const { theme } = useTheme();
     const [isMobile, setIsMobile] = useState(false);
     const [isLandscape, setIsLandscape] = useState(false);
+    const [isInView, setIsInView] = useState(true);
+    const sectionRef = React.useRef(null);
 
     useEffect(() => {
         const handleResize = () => {
@@ -199,11 +208,22 @@ const Hero = ({ data }) => {
         };
         handleResize();
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+
+        // Smart animation pause using Intersection Observer
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsInView(entry.isIntersecting),
+            { threshold: 0.1 }
+        );
+        if (sectionRef.current) observer.observe(sectionRef.current);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            observer.disconnect();
+        };
     }, []);
 
     return (
-        <section id="home" style={{
+        <section ref={sectionRef} id="home" style={{
             minHeight: '100vh',
             width: '100%',
             position: 'relative',
@@ -213,9 +233,10 @@ const Hero = ({ data }) => {
             overflow: 'hidden',
             backgroundColor: theme.primaryBg,
             paddingTop: isMobile ? '80px' : '0',
-            transition: 'background-color 0.3s ease'
+            transition: 'background-color 0.3s ease',
+            contain: 'paint' // Optimize rendering boundaries
         }}>
-            <IndustrialBackground type="home" />
+            <IndustrialBackground type="home" isActive={isInView} />
 
             {/* DevOps Atom Cluster - Side-by-side in Landscape, Top in Portrait */}
             <div style={{
@@ -223,10 +244,11 @@ const Hero = ({ data }) => {
                 left: isLandscape ? '0%' : (isMobile ? '50%' : '1%'),
                 top: isLandscape ? '50%' : (isMobile ? '20%' : '50%'),
                 transform: isLandscape ? 'translateY(-50%) scale(0.55)' : (isMobile ? 'translateX(-50%) scale(0.59)' : 'translateY(-50%) scale(0.97)'),
-                opacity: isMobile ? 0.35 : 1,
-                transition: 'all 0.5s ease'
+                opacity: isMobile ? (isInView ? 0.35 : 0) : (isInView ? 1 : 0),
+                transition: 'all 0.5s ease',
+                willChange: 'transform' // Consolidated hardware acceleration hint
             }}>
-                <DevOpsAtom theme={theme} />
+                <DevOpsAtom theme={theme} isActive={isInView} />
             </div>
 
             <div className="container" style={{

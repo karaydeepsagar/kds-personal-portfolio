@@ -109,82 +109,40 @@ const Contact = ({ data }) => {
                         backdropFilter: 'blur(20px)',
                         borderRadius: '24px',
                         border: `1px solid ${theme.border}`,
-                        boxShadow: theme.cardShadow,
+                        boxShadow: 'none',
                         position: 'relative',
                         overflow: 'hidden'
                     }}
                 >
-                    {/* Nucleus glow centered INSIDE the contact tile */}
-                    <div
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            width: isMobile ? 'min(620px, 95%)' : 'min(820px, 92%)',
-                            height: isMobile ? 'min(620px, 95%)' : 'min(820px, 92%)',
-                            transform: 'translate(-50%, -50%)',
-                            transformOrigin: 'center',
-                            background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 72%)',
-                            borderRadius: '50%',
-                            filter: 'blur(125px)',
-                            opacity: theme.mode === 'dark' ? 0.22 : 0.14,
-                            pointerEvents: 'none',
-                            zIndex: 0
-                        }}
-                    />
-
-                    {/* Big infinity loop animation (centered in tile) */}
-                    <svg
-                        width={isMobile ? 'min(1200px, 145%)' : 'min(1600px, 150%)'}
-                        height={isMobile ? 'min(560px, 88%)' : 'min(760px, 92%)'}
-                        viewBox="0 0 800 400"
-                        preserveAspectRatio="xMidYMid meet"
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            filter: theme.mode === 'dark' ? 'blur(1.2px)' : 'blur(1px)',
-                            opacity: theme.mode === 'dark' ? 0.42 : 0.34,
-                            pointerEvents: 'none',
-                            zIndex: 0
-                        }}
-                        aria-hidden="true"
-                    >
-                        <motion.path
-                            d={infinityPath}
-                            fill="none"
-                            stroke={theme.border}
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            opacity={theme.mode === 'dark' ? 0.55 : 0.35}
+                    {/* Big pulsing dark red nucleus (Mathematically Centered) */}
+                    <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        pointerEvents: 'none',
+                        zIndex: 0
+                    }}>
+                        <motion.div
+                            animate={shouldLoop ? {
+                                scale: [1, 1.15, 1],
+                                opacity: [0.35, 0.6, 0.35]
+                            } : {}}
+                            transition={shouldLoop ? {
+                                duration: 8,
+                                repeat: Infinity,
+                                ease: 'easeInOut'
+                            } : undefined}
+                            style={{
+                                width: isMobile ? 'min(620px, 98%)' : 'min(860px, 95%)',
+                                height: isMobile ? 'min(620px, 98%)' : 'min(860px, 95%)',
+                                background: 'radial-gradient(circle, #710202 0%, transparent 75%)',
+                                borderRadius: '50%',
+                                filter: 'blur(100px)',
+                            }}
                         />
-                        <motion.path
-                            d={infinityPath}
-                            fill="none"
-                            stroke={theme.mode === 'dark' ? '#fff' : theme.mutedText}
-                            strokeWidth="3.6"
-                            strokeLinecap="butt"
-                            strokeLinejoin="round"
-                            strokeDasharray="28 92"
-                            animate={shouldLoop ? { strokeDashoffset: [60, -180] } : { strokeDashoffset: 0 }}
-                            transition={shouldLoop ? { duration: 7, repeat: Infinity, ease: 'linear' } : undefined}
-                            opacity={theme.mode === 'dark' ? 0.34 : 0.28}
-                        />
-                        <motion.path
-                            d={infinityPath}
-                            fill="none"
-                            stroke="var(--netflix-red)"
-                            strokeWidth="4.2"
-                            strokeLinecap="butt"
-                            strokeLinejoin="round"
-                            strokeDasharray="28 92"
-                            animate={shouldLoop ? { strokeDashoffset: [0, -240] } : { strokeDashoffset: 0 }}
-                            transition={shouldLoop ? { duration: 7, repeat: Infinity, ease: 'linear' } : undefined}
-                            opacity={theme.mode === 'dark' ? 0.42 : 0.36}
-                        />
-                    </svg>
+                    </div>
 
                     {/* Contact Info Card */}
                     <div

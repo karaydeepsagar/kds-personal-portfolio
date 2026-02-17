@@ -70,8 +70,8 @@ const Experience = ({ data }) => {
                                 borderRadius: '32px',
                                 padding: 'clamp(20px, 5vw, 50px)',
                                 border: `1px solid ${theme.border}`,
-                                // Only left and right glow: 0px vertical offset, no general shadow
-                                boxShadow: `-15px 0 40px -10px ${theme.accent}55, 15px 0 40px -10px ${theme.accent}55`,
+                                // Strictly left and right glow: high offset + aggressive negative spread to choke top/bottom bleed
+                                boxShadow: `-30px 0 35px -20px ${theme.mode === 'dark' ? '#ffffff44' : '#94a3b844'}, 30px 0 35px -20px ${theme.mode === 'dark' ? '#ffffff44' : '#94a3b844'}`,
                                 position: 'relative',
                                 overflow: 'hidden',
                                 width: '100%' // Wide screen layout
@@ -98,7 +98,7 @@ const Experience = ({ data }) => {
                                         x: '-50%',
                                         y: '-50%',
                                         transformOrigin: 'center',
-                                        background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 75%)',
+                                        background: `radial-gradient(circle, ${theme.mode === 'dark' ? '#ffffffcf' : '#94a3b8'} 0%, transparent 75%)`,
                                         borderRadius: '50%',
                                         filter: 'blur(110px)',
                                         willChange: 'transform, opacity'

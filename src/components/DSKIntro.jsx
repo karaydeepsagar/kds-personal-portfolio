@@ -61,8 +61,8 @@ const DSKIntro = ({ onComplete }) => {
                 style={{
                     position: 'absolute',
                     inset: 0,
-                    // SEQUENCE: Red -> Grey -> White -> Black
-                    background: 'linear-gradient(135deg, #b9090b 0%, #757575 35%, #ffffff 60%, #000000 100%)',
+                    // SEQUENCE: Red -> Dark Red -> Light Grey -> Dark Grey -> Black
+                    background: 'linear-gradient(135deg, #b11717ff 0%, #710202ff 25%, #acacac 50%, #3a3737ff 75%, #000000 100%)',
                     backgroundSize: '400% 400%',
                     zIndex: 1
                 }}

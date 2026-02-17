@@ -11,7 +11,7 @@ import { useTheme } from '../context/ThemeContext';
  * IndustrialBackground: Versatile background component for various sections.
  * Features a signature rotating ring, infinity loop, and context-aware icons.
  */
-const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
+const IndustrialBackground = ({ type = 'home', variant = 'default', side = 'right', isActive = true }) => {
     const { theme } = useTheme();
     const [isMobile, setIsMobile] = useState(false);
     const [viewportWidth, setViewportWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1440);
@@ -90,7 +90,7 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
             case 'home':
             default:
                 return {
-                    icons: [Cloud, Server, Database, Globe, Shield],
+                    icons: [Cloud, Server, Database, Globe, Shield, Settings, Code2],
                     mainColor: theme.accent,
                     secondaryColor: theme.border,
                     opacity: 0.3
@@ -112,9 +112,9 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
     const homeInfinityHeightPx = Math.round(327 + (375 - 327) * homeInfinityT);
     const homeInfinityScaleValue = 0.84 + (0.93 - 0.84) * homeInfinityT;
     // For Professional Journey: make ring + nucleus + infinity larger, but keep circulating icons the same size.
-    const ringMaxSize = experienceBoost ? '900px' : '616px';
+    const ringMaxSize = experienceBoost ? '900px' : '567px';
     const ringScale = experienceBoost ? 1.18 : 1;
-    const desktopClusterRight = experienceBoost ? '-10%' : '-15%';
+    const desktopClusterRight = experienceBoost ? '-10%' : '1.5%'; // Mirrored gap from left side's 1% appearance
 
     const infinityWidth = experienceBoost ? '840px' : (homeBoost ? `${homeInfinityWidthPx}px` : '760px');
     const infinityHeight = experienceBoost ? '420px' : (homeBoost ? `${homeInfinityHeightPx}px` : '380px');
@@ -217,11 +217,10 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
             </div>
         );
     }
-
     const isLeft = side === 'left';
     const clusterSideStyle = isLeft
         ? { left: isMobile ? undefined : '-15%', right: isMobile ? '50%' : undefined }
-        : { right: isMobile ? '50%' : (homeBoost ? '-8%' : '-15%'), left: isMobile ? undefined : undefined };
+        : { right: isMobile ? '50%' : desktopClusterRight, left: isMobile ? undefined : undefined };
 
     const clusterTransform = isMobile
         ? 'translate(50%, -50%) scale(0.6)'
@@ -229,7 +228,13 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
 
     const infinitySideStyle = isLeft
         ? { left: '-18%', right: undefined }
-        : { right: homeBoost ? '-12%' : '-18%', left: undefined };
+        : {
+            // Perfectly align center of infinity (infinityWidth/2) with center of ring (desktopClusterRight + ringMaxSize/2)
+            right: homeBoost
+                ? `calc(${desktopClusterRight} + (${ringMaxSize} / 2) - (${infinityWidth} / 2))`
+                : '-18%',
+            left: undefined
+        };
 
     return (
         <div style={{
@@ -257,7 +262,7 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                         transform: experienceBoost
                             ? `scale(${Math.max(infinityScale, 1.12)})`
                             : `translateY(-50%) scale(${infinityScale})`,
-                        opacity: homeBoost
+                        opacity: (homeBoost && isActive)
                             ? (theme.mode === 'dark' ? 0.46 : 0.25)
                             : (theme.mode === 'dark' ? 0.32 : 0.15),
                         filter: homeBoost && !isScrolling ? `drop-shadow(0 0 16px ${theme.accent}22)` : 'none',
@@ -284,8 +289,8 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                         strokeLinecap="butt"
                         strokeLinejoin="round"
                         strokeDasharray="28 92"
-                        animate={{ strokeDashoffset: [60, -180] }}
-                        transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                        animate={(homeBoost && isActive) ? { strokeDashoffset: [60, -180] } : {}}
+                        transition={(homeBoost && isActive) ? { duration: 6, repeat: Infinity, ease: "linear" } : {}}
                         opacity={homeBoost
                             ? (theme.mode === 'dark' ? 0.52 : 0.0)
                             : (theme.mode === 'dark' ? 0.36 : 0.0)}
@@ -298,8 +303,8 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                         strokeLinecap="butt"
                         strokeLinejoin="round"
                         strokeDasharray="28 92"
-                        animate={{ strokeDashoffset: [60, -180] }}
-                        transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                        animate={(homeBoost && isActive) ? { strokeDashoffset: [60, -180] } : {}}
+                        transition={(homeBoost && isActive) ? { duration: 6, repeat: Infinity, ease: "linear" } : {}}
                         opacity={homeBoost
                             ? (theme.mode === 'dark' ? 0.0 : 0.46)
                             : (theme.mode === 'dark' ? 0.0 : 0.34)}
@@ -312,8 +317,8 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                         strokeLinecap="butt"
                         strokeLinejoin="round"
                         strokeDasharray="28 92"
-                        animate={{ strokeDashoffset: [0, -240] }}
-                        transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                        animate={(homeBoost && isActive) ? { strokeDashoffset: [0, -240] } : {}}
+                        transition={(homeBoost && isActive) ? { duration: 6, repeat: Infinity, ease: "linear" } : {}}
                         opacity={homeBoost
                             ? (theme.mode === 'dark' ? 0.72 : 0.72)
                             : (theme.mode === 'dark' ? 0.55 : 0.62)}
@@ -339,24 +344,27 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                     position: 'absolute',
                     inset: 0,
                     transform: `scale(${ringScale})`,
-                    transformOrigin: 'center'
+                    transformOrigin: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                 }}>
                     {/* Core Radial Glow */}
                     <motion.div
-                        animate={{
+                        animate={(homeBoost && isActive) ? {
                             scale: [1, 1.2, 1],
                             opacity: [0.4, 0.7, 0.4]
-                        }}
-                        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                        } : {}}
+                        transition={(homeBoost && isActive) ? { duration: 8, repeat: Infinity, ease: "easeInOut" } : {}}
                         style={{
-                            position: 'absolute',
-                            top: '15%',
-                            left: '15%',
+                            position: 'relative',
                             width: '70%',
                             height: '70%',
                             background: 'radial-gradient(circle, var(--netflix-red) 0%, transparent 75%)',
                             borderRadius: '50%',
-                            filter: theme.mode === 'dark' ? 'blur(100px)' : 'blur(80px)',
+                            filter: isMobile
+                                ? 'blur(40px)' // Light blur for mobile
+                                : (theme.mode === 'dark' ? 'blur(100px)' : 'blur(80px)'),
                             opacity: theme.mode === 'dark' ? 1 : 0.5,
                             zIndex: -1
                         }}
@@ -364,8 +372,8 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
 
                     {/* Rotating Tech Ring */}
                     <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                        animate={(homeBoost && isActive) ? { rotate: 360 } : {}}
+                        transition={(homeBoost && isActive) ? { duration: 30, repeat: Infinity, ease: "linear" } : {}}
                         style={{
                             position: 'absolute',
                             inset: 0,
@@ -379,7 +387,7 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                                 ? (theme.mode === 'dark' ? 0.86 : 0.7)
                                 : (theme.mode === 'dark' ? 0.7 : 0.55),
                             boxShadow: homeBoost ? `0 0 0 1px ${theme.accent}26, 0 0 22px ${theme.accent}1A` : 'none',
-                            willChange: 'transform',
+                            willChange: 'transform, opacity',
                             backfaceVisibility: 'hidden',
                             WebkitBackfaceVisibility: 'hidden'
                         }}
@@ -388,9 +396,10 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
 
                 {/* 2. Orbital Tech Icons (Rotating with Ring) */}
                 {icons.map((Icon, idx) => {
-                    // Home: place icons between the outer orbit ring and the infinity loop.
-                    // Other panels keep the tighter orbit.
-                    const orbitRadius = homeBoost ? 239 : 235;
+                    // Responsive Orbit: calculate radius based on actual container size
+                    const currentContainerSize = isMobile ? 500 : Math.min(parseInt(ringMaxSize), viewportWidth * 0.7);
+                    const safeRadius = (currentContainerSize / 2);
+                    const orbitRadius = homeBoost ? (safeRadius * 0.78) : (safeRadius * 0.82);
                     const orbitSpeed = 30; // Faster, synchronized with tech ring
                     // Ensure perfect geometrical spacing (72 degrees for 5 icons)
                     const initialRotation = idx * (360 / icons.length);
@@ -398,31 +407,30 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                     return (
                         <motion.div
                             key={idx}
-                            animate={{ rotate: [initialRotation, initialRotation + 360] }}
-                            transition={{
+                            animate={(homeBoost && isActive) ? { rotate: [initialRotation, initialRotation + 360] } : {}}
+                            transition={(homeBoost && isActive) ? {
                                 duration: orbitSpeed,
                                 repeat: Infinity,
                                 ease: "linear"
-                            }}
+                            } : {}}
                             style={{
                                 position: 'absolute',
                                 top: '50%',
-                                // Shift pivot right by ~8% for Home to move icons towards infinity loop
-                                left: homeBoost ? '54%' : '50%',
+                                left: '50%',
                                 width: '1px', // Pivot point
                                 height: '1px',
                                 zIndex: 2
                             }}
                         >
                             <motion.div
-                                animate={{
+                                animate={(homeBoost && isActive) ? {
                                     rotate: [-(initialRotation), -(initialRotation + 360)], // Counter-rotate at matching speed
                                     scale: [1, 1.1, 1],
-                                }}
-                                transition={{
+                                } : {}}
+                                transition={(homeBoost && isActive) ? {
                                     rotate: { duration: orbitSpeed, repeat: Infinity, ease: "linear" },
                                     scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                                }}
+                                } : {}}
                                 style={{
                                     position: 'absolute',
                                     left: orbitRadius,
@@ -430,15 +438,14 @@ const IndustrialBackground = ({ type, variant = 'full', side = 'right' }) => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    top: '-25px', // Half of icon size to center on orbit line
-                                    // Static drop-shadow is much cheaper than animating `filter`.
-                                    filter: isScrolling
+                                    top: '-25px',
+                                    filter: (isScrolling || isMobile) // No drop-shadow on mobile or during scroll
                                         ? 'none'
                                         : `drop-shadow(0 0 16px ${idx % 2 === 0 ? 'var(--netflix-red)' : secondaryColor}66)`,
                                     willChange: 'transform'
                                 }}
                             >
-                                <Icon size={50} strokeWidth={1} />
+                                <Icon size={45} strokeWidth={1} /> {/* Reduced by 10% (from 50) */}
 
                                 {/* Background Glow for the Icon itself */}
                                 <div style={{

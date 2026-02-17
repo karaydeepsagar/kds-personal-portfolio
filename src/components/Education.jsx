@@ -62,14 +62,16 @@ const Education = ({ data }) => {
                                 borderRadius: '26px',
                                 padding: isMobile ? '22px' : '30px',
                                 border: `1px solid ${theme.border}`,
-                                boxShadow: theme.cardShadow,
+                                // Strictly left and right glow: high offset + aggressive negative spread
+                                boxShadow: `-30px 0 35px -20px ${theme.accent}77, 30px 0 35px -20px ${theme.accent}77`,
                                 position: 'relative',
-                                overflow: 'hidden',
                                 display: 'flex',
                                 alignItems: 'center',
                                 cursor: 'default',
                                 userSelect: 'none',
-                                transform: 'translateZ(0)' // Fixes backdrop-filter rendering glitches
+                                transform: 'translate3d(0, 0, 0)',
+                                backfaceVisibility: 'hidden',
+                                WebkitBackfaceVisibility: 'hidden'
                             }}
                         >
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '18px', flexWrap: 'wrap', width: '100%' }}>
