@@ -109,6 +109,12 @@ export const ThemeProvider = ({ children }) => {
         document.documentElement.style.setProperty('--primary-bg', theme.primaryBg);
         document.documentElement.style.setProperty('--primary-text', theme.primaryText);
         document.documentElement.style.setProperty('--accent', theme.accent);
+
+        // Update mobile address bar color
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', theme.primaryBg);
+        }
     }, [currentTheme]);
 
     const toggleTheme = () => {

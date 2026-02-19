@@ -70,7 +70,7 @@ function App() {
                         
                         html {
                             scroll-behavior: smooth;
-                            background-color: #000;
+                            background-color: var(--primary-bg, #000);
                         }
                         
                         body {
@@ -80,6 +80,8 @@ function App() {
                             -webkit-font-smoothing: antialiased;
                             -moz-osx-font-smoothing: grayscale;
                             text-rendering: optimizeLegibility;
+                            background-color: var(--primary-bg, #000);
+                            color: var(--primary-text, #fff);
                         }
                         
                         section {

@@ -8,9 +8,13 @@
   --netflix-white: #e5e5e5;
   --netflix-hover-white: #ffffff;
 
+  /* These will be overridden by ThemeContext at runtime */
   --bg-dark: var(--netflix-black);
   --bg-card: var(--netflix-dark-gray);
   --primary: var(--netflix-red);
+  --primary-bg: var(--netflix-black); /* Default fallback */
+  --primary-text: var(--netflix-white); /* Default fallback */
+  
   --secondary: var(--netflix-white);
   --text-primary: var(--netflix-white);
   --text-secondary: #b3b3b3;
@@ -28,10 +32,11 @@
 
 body {
   font-family: var(--font-body);
-  background-color: var(--bg-dark);
-  color: var(--text-primary);
+  background-color: var(--primary-bg, var(--bg-dark));
+  color: var(--primary-text, var(--text-primary));
   line-height: 1.6;
   min-width: 320px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1,
