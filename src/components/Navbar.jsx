@@ -70,17 +70,27 @@ const Navbar = () => {
         <nav
             style={{
                 position: 'fixed',
-                top: 0,
-                width: '100%',
+                top: scrolled ? '10px' : '20px', // Moves up slightly when scrolling
+                left: '50%',                   // Always center aligned
+                transform: 'translateX(-50%)', // Centering technique
+                width: '90%',                  // Always reduced width
+                maxWidth: '1400px',
+                right: 'auto',                 // Reset right property
+                margin: '0',                   // Reset auto margin since we use translate
                 zIndex: 1000,
                 transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                backgroundColor: scrolled || mobileMenuOpen ? theme.navBg : 'transparent',
-                backdropFilter: scrolled || mobileMenuOpen ? theme.navBlur : 'none',
-                padding: '15px 6%',
-                borderBottom: scrolled ? `1px solid ${theme.borderAccent}` : '1px solid transparent'
+                // Scrolled: Blur + Semi-transparent BG
+                // Frosted Glass Effect: Lower opacity + High Blur
+                backgroundColor: scrolled || mobileMenuOpen ? (theme.mode === 'dark' ? 'rgba(20, 20, 20, 0.4)' : 'rgba(255, 255, 255, 0.4)') : 'transparent',
+                backdropFilter: scrolled || mobileMenuOpen ? 'blur(16px) saturate(180%)' : 'none',
+                WebkitBackdropFilter: scrolled || mobileMenuOpen ? 'blur(16px) saturate(180%)' : 'none', // Safari support
+                padding: '10px 30px',          // Always comfy rounded padding
+                borderRadius: '50px',          // Always rounded
+                border: scrolled ? `1px solid ${theme.borderAccent}` : '1px solid transparent',
+                boxShadow: scrolled ? '0 10px 30px rgba(0,0,0,0.1)' : 'none'
             }}
         >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1400px', margin: '0 auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', margin: '0' }}>
                 <motion.div
                     onClick={() => scrollToSection('home')}
                     whileHover={{ scale: 1.05 }}

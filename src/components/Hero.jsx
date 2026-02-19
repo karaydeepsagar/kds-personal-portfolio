@@ -129,22 +129,7 @@ const DevOpsAtom = ({ theme, isActive = true }) => {
 
             {isActive && orbits.map((orbit, orbitIdx) => (
                 <div key={orbitIdx} style={{ position: 'absolute', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <motion.div
-                        animate={{ rotate: 360 * orbit.direction }}
-                        transition={{ duration: orbit.speed, repeat: Infinity, ease: "linear" }}
-                        style={{
-                            position: 'absolute',
-                            width: orbit.radius * 2,
-                            height: orbit.radius * 2,
-                            borderRadius: '50%',
-                            border: `1px solid ${theme.border}`,
-                            borderTop: `${isMobile ? '3px' : '4px'} solid ${orbitIdx % 2 === 0 ? theme.accent : (theme.mode === 'dark' ? theme.primaryText : theme.mutedText)}`,
-                            borderBottom: `${isMobile ? '3px' : '4px'} solid ${orbitIdx % 2 === 0 ? (theme.mode === 'dark' ? theme.primaryText : theme.mutedText) : theme.accent}`,
-                            opacity: theme.mode === 'dark' ? 0.65 : 0.75,
-                            boxShadow: isMobile ? 'none' : (theme.mode === 'dark' ? `0 0 30px ${theme.accent}33` : `0 0 20px ${theme.accent}4d`)
-                        }}
-                    />
-
+                    
                     {orbit.tools.map((tool, toolIdx) => {
                         const angle = toolIdx * (360 / orbit.tools.length);
                         return (
@@ -242,9 +227,10 @@ const Hero = ({ data }) => {
             <div style={{
                 position: 'absolute',
                 left: isLandscape ? '0%' : (isMobile ? '50%' : '1%'),
-                top: isLandscape ? '50%' : (isMobile ? '20%' : '50%'),
-                transform: isLandscape ? 'translateY(-50%) scale(0.55)' : (isMobile ? 'translateX(-50%) scale(0.59)' : 'translateY(-50%) scale(0.97)'),
-                opacity: isMobile ? (isInView ? 0.35 : 0) : (isInView ? 1 : 0),
+                top: isLandscape ? '50%' : (isMobile ? '28%' : '50%'), // Adjusted mobile top to center it better 
+                transform: isLandscape ? 'translateY(-50%) scale(0.55)' : (isMobile ? 'translateX(-50%) scale(0.65)' : 'translateY(-50%) scale(0.97)'), // Increased mobile scale slightly
+                // Unified opacity: High visibility on all devices as requested
+                opacity: isInView ? 1 : 0, 
                 transition: 'all 0.5s ease',
                 willChange: 'transform' // Consolidated hardware acceleration hint
             }}>

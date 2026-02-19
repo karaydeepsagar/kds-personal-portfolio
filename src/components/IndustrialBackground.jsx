@@ -247,28 +247,27 @@ const IndustrialBackground = ({ type = 'home', variant = 'default', side = 'righ
             zIndex: 0,
             pointerEvents: 'none'
         }}>
-            {/* 3. Symbolic Connection Path (Infinity) - Hidden on Mobile */}
-            {!isMobile && (
-                <svg
-                    width={experienceBoost ? '100%' : infinityWidth}
-                    height={experienceBoost ? '100%' : infinityHeight}
-                    viewBox="300 0 600 400"
-                    preserveAspectRatio={experienceBoost ? 'xMidYMid slice' : 'xMidYMid meet'}
-                    style={{
-                        position: 'absolute',
-                        top: experienceBoost ? 0 : '50%',
-                        ...(experienceBoost ? {} : infinitySideStyle),
-                        ...(experienceBoost ? { right: infinityRight } : {}),
-                        transform: experienceBoost
-                            ? `scale(${Math.max(infinityScale, 1.12)})`
-                            : `translateY(-50%) scale(${infinityScale})`,
-                        opacity: (homeBoost && isActive)
-                            ? (theme.mode === 'dark' ? 0.46 : 0.25)
-                            : (theme.mode === 'dark' ? 0.32 : 0.15),
-                        filter: homeBoost && !isScrolling ? `drop-shadow(0 0 16px ${theme.accent}22)` : 'none',
-                        zIndex: 0
-                    }}
-                >
+            {/* 3. Symbolic Connection Path (Infinity) - Now Visible on Mobile (Scaled) */}
+            <svg
+                width={isMobile ? '100%' : (experienceBoost ? '100%' : infinityWidth)}
+                height={isMobile ? '200px' : (experienceBoost ? '100%' : infinityHeight)}
+                viewBox={isMobile ? "0 0 800 400" : "300 0 600 400"} // Full view on mobile, cropped on desktop
+                preserveAspectRatio={experienceBoost ? 'xMidYMid slice' : 'xMidYMid meet'}
+                style={{
+                    position: 'absolute',
+                    top: experienceBoost ? 0 : (isMobile ? '65%' : '50%'), // Lower on mobile to sit behind ring
+                    ...(experienceBoost ? {} : (isMobile ? { left: '0', right: '0' } : infinitySideStyle)), // Centered on mobile
+                    ...(experienceBoost ? { right: infinityRight } : {}),
+                    transform: experienceBoost
+                        ? `scale(${Math.max(infinityScale, 1.12)})`
+                        : (isMobile ? `translateY(-50%) scale(0.6)` : `translateY(-50%) scale(${infinityScale})`), // Smaller scale on mobile
+                    opacity: (homeBoost && isActive)
+                        ? (theme.mode === 'dark' ? 0.61 : 0.40)
+                        : (theme.mode === 'dark' ? 0.32 : 0.15),
+                    filter: homeBoost && !isScrolling ? `drop-shadow(0 0 16px ${theme.accent}22)` : 'none',
+                    zIndex: 0
+                }}
+            >
                     <motion.path
                         d={infinityPath}
                         fill="none"
@@ -277,7 +276,7 @@ const IndustrialBackground = ({ type = 'home', variant = 'default', side = 'righ
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         opacity={homeBoost
-                            ? (theme.mode === 'dark' ? 0.68 : 0.44)
+                            ? (theme.mode === 'dark' ? 0.83 : 0.59)
                             : (theme.mode === 'dark' ? 0.55 : 0.35)}
                     />
                     {/* Keep white + red dashes interleaved (no overlay) by locking phase offset */}
@@ -292,7 +291,7 @@ const IndustrialBackground = ({ type = 'home', variant = 'default', side = 'righ
                         animate={(homeBoost && isActive) ? { strokeDashoffset: [60, -180] } : {}}
                         transition={(homeBoost && isActive) ? { duration: 6, repeat: Infinity, ease: "linear" } : {}}
                         opacity={homeBoost
-                            ? (theme.mode === 'dark' ? 0.52 : 0.0)
+                            ? (theme.mode === 'dark' ? 0.67 : 0.15)
                             : (theme.mode === 'dark' ? 0.36 : 0.0)}
                     />
                     <motion.path
@@ -306,7 +305,7 @@ const IndustrialBackground = ({ type = 'home', variant = 'default', side = 'righ
                         animate={(homeBoost && isActive) ? { strokeDashoffset: [60, -180] } : {}}
                         transition={(homeBoost && isActive) ? { duration: 6, repeat: Infinity, ease: "linear" } : {}}
                         opacity={homeBoost
-                            ? (theme.mode === 'dark' ? 0.0 : 0.46)
+                            ? (theme.mode === 'dark' ? 0.15 : 0.61)
                             : (theme.mode === 'dark' ? 0.0 : 0.34)}
                     />
                     <motion.path
@@ -320,11 +319,10 @@ const IndustrialBackground = ({ type = 'home', variant = 'default', side = 'righ
                         animate={(homeBoost && isActive) ? { strokeDashoffset: [0, -240] } : {}}
                         transition={(homeBoost && isActive) ? { duration: 6, repeat: Infinity, ease: "linear" } : {}}
                         opacity={homeBoost
-                            ? (theme.mode === 'dark' ? 0.72 : 0.72)
+                            ? (theme.mode === 'dark' ? 0.87 : 0.87)
                             : (theme.mode === 'dark' ? 0.55 : 0.62)}
                     />
                 </svg>
-            )}
 
             {/* 1. Large Themed Animation Cluster (Right Aligned or Centered on Mobile) */}
             <div style={{
@@ -370,28 +368,8 @@ const IndustrialBackground = ({ type = 'home', variant = 'default', side = 'righ
                         }}
                     />
 
-                    {/* Rotating Tech Ring */}
-                    <motion.div
-                        animate={(homeBoost && isActive) ? { rotate: 360 } : {}}
-                        transition={(homeBoost && isActive) ? { duration: 30, repeat: Infinity, ease: "linear" } : {}}
-                        style={{
-                            position: 'absolute',
-                            inset: 0,
-                            border: theme.mode === 'dark' ? '2px solid rgba(255, 255, 255, 0.1)' : '2px solid rgba(0, 0, 0, 0.08)',
-                            borderRadius: '50%',
-                            borderTop: `${homeBoost ? 5 : 4}px solid ${theme.accent}`,
-                            borderTopColor: theme.accent,
-                            borderBottom: theme.mode === 'dark' ? `4px solid ${theme.primaryText}` : '4px solid rgba(26, 26, 26, 0.22)',
-                            borderRight: theme.mode === 'dark' ? '2px solid rgba(255, 255, 255, 0.3)' : '2px solid rgba(0, 0, 0, 0.14)',
-                            opacity: homeBoost
-                                ? (theme.mode === 'dark' ? 0.86 : 0.7)
-                                : (theme.mode === 'dark' ? 0.7 : 0.55),
-                            boxShadow: homeBoost ? `0 0 0 1px ${theme.accent}26, 0 0 22px ${theme.accent}1A` : 'none',
-                            willChange: 'transform, opacity',
-                            backfaceVisibility: 'hidden',
-                            WebkitBackfaceVisibility: 'hidden'
-                        }}
-                    />
+                    {/* Rotating Tech Ring - REMOVED as per request */}
+                    
                 </div>
 
                 {/* 2. Orbital Tech Icons (Rotating with Ring) */}
@@ -399,7 +377,7 @@ const IndustrialBackground = ({ type = 'home', variant = 'default', side = 'righ
                     // Responsive Orbit: calculate radius based on actual container size
                     const currentContainerSize = isMobile ? 500 : Math.min(parseInt(ringMaxSize), viewportWidth * 0.7);
                     const safeRadius = (currentContainerSize / 2);
-                    const orbitRadius = homeBoost ? (safeRadius * 0.78) : (safeRadius * 0.82);
+                    const orbitRadius = homeBoost ? (safeRadius * 0.72) : (safeRadius * 0.84);
                     const orbitSpeed = 30; // Faster, synchronized with tech ring
                     // Ensure perfect geometrical spacing (72 degrees for 5 icons)
                     const initialRotation = idx * (360 / icons.length);
