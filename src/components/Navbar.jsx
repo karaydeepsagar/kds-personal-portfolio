@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import ThemeToggle from './ThemeToggle';
@@ -7,10 +7,21 @@ import ThemeToggle from './ThemeToggle';
 const Navbar = () => {
     const { theme } = useTheme();
     const [scrolled, setScrolled] = useState(false);
+    const [visible, setVisible] = useState(true);
     const [activeSection, setActiveSection] = useState('home');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const rafIdRef = useRef(null);
     const lastActiveRef = useRef('home');
+    const { scrollY } = useScroll();
+
+    useMotionValueEvent(scrollY, "change", (latest) => {
+        const previous = scrollY.getPrevious();
+        if (latest > previous && latest > 150) {
+            setVisible(false);
+        } else {
+            setVisible(true);
+        }
+    });
 
     useEffect(() => {
         const sections = ['home', 'projects', 'experience', 'skills', 'education', 'blog', 'contact'];
@@ -67,7 +78,14 @@ const Navbar = () => {
     };
 
     return (
-        <nav
+        <motion.nav
+            initial={{ y: 0, x: '-50%', opacity: 1 }}
+            animate={{ 
+                y: visible ? 0 : -100,
+                opacity: visible ? 1 : 0, 
+                x: '-50%'
+            }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
             style={{
                 position: 'fixed',
                 top: scrolled ? '8px' : '15px', // Reduced top spacing
@@ -297,7 +315,7 @@ const Navbar = () => {
                     .mobile-toggle { display: flex !important; }
                 }
             `}</style>
-        </nav>
+        </motion.nav>
     );
 };
 

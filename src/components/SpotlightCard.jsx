@@ -5,30 +5,30 @@ import { useTheme } from '../context/ThemeContext';
 
 const SpotlightCard = ({ children, className = "", onClick, style = {} }) => {
     const divRef = useRef(null);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [opacity, setOpacity] = useState(0);
+    const spotlightRef = useRef(null);
     const { theme } = useTheme();
 
     const handleMouseMove = (e) => {
-        if (!divRef.current) return;
+        if (!divRef.current || !spotlightRef.current) return;
 
         const rect = divRef.current.getBoundingClientRect();
-        setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-    };
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-    const handleMouseEnter = () => {
-        setOpacity(1);
+        spotlightRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, ${theme.borderAccent}, transparent 40%)`;
+        spotlightRef.current.style.opacity = 1;
     };
 
     const handleMouseLeave = () => {
-        setOpacity(0);
+        if (spotlightRef.current) {
+            spotlightRef.current.style.opacity = 0;
+        }
     };
 
     return (
         <div
             ref={divRef}
             onMouseMove={handleMouseMove}
-            onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={onClick}
             className={className}
@@ -45,13 +45,14 @@ const SpotlightCard = ({ children, className = "", onClick, style = {} }) => {
             }}
         >
             <div
+                ref={spotlightRef}
                 style={{
                     pointerEvents: 'none',
                     position: 'absolute',
                     inset: '-1px', // Extend slightly to cover borders
-                    opacity,
+                    opacity: 0,
                     transition: 'opacity 0.3s ease',
-                    background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, ${theme.borderAccent}, transparent 40%)`,
+                    background: 'transparent',
                     zIndex: 0,
                     borderRadius: 'inherit'
                 }}

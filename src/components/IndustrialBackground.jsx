@@ -90,7 +90,7 @@ const IndustrialBackground = ({ type = 'home', variant = 'default', side = 'righ
             case 'home':
             default:
                 return {
-                    icons: [Cloud, Server, Database, Globe, Shield, Settings, Code2],
+                    icons: [Cloud, Server, Database, Globe, Shield, Settings, Code2, Cpu],
                     mainColor: theme.accent,
                     secondaryColor: theme.border,
                     opacity: 0.3
