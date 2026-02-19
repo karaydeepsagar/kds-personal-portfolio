@@ -48,6 +48,7 @@ h6 {
   font-family: var(--font-heading);
   color: var(--text-primary);
   line-height: 1.1;
+  letter-spacing: -0.02em; /* Tighter headings for premium look */
 }
 
 a {
@@ -159,6 +160,15 @@ ul {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* Laptop Optimization: Scale down UI to simulate 90% zoom on 14-15.6" screens */
+@media screen and (min-width: 1024px) and (max-width: 1600px) {
+  html {
+    zoom: 0.9; /* Works in Chrome/Edge/Safari */
+    -moz-transform: scale(0.9); /* Fallback for Firefox */
+    -moz-transform-origin: top center;
+  }
 }
 
 .fade-bottom {

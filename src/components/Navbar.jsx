@@ -70,11 +70,11 @@ const Navbar = () => {
         <nav
             style={{
                 position: 'fixed',
-                top: scrolled ? '10px' : '20px', // Moves up slightly when scrolling
+                top: scrolled ? '8px' : '15px', // Reduced top spacing
                 left: '50%',                   // Always center aligned
                 transform: 'translateX(-50%)', // Centering technique
                 width: '90%',                  // Always reduced width
-                maxWidth: '1400px',
+                maxWidth: '1200px',            // Reduced max-width for better compactness
                 right: 'auto',                 // Reset right property
                 margin: '0',                   // Reset auto margin since we use translate
                 zIndex: 1000,
@@ -84,7 +84,7 @@ const Navbar = () => {
                 backgroundColor: scrolled || mobileMenuOpen ? (theme.mode === 'dark' ? 'rgba(20, 20, 20, 0.4)' : 'rgba(255, 255, 255, 0.4)') : 'transparent',
                 backdropFilter: scrolled || mobileMenuOpen ? 'blur(16px) saturate(180%)' : 'none',
                 WebkitBackdropFilter: scrolled || mobileMenuOpen ? 'blur(16px) saturate(180%)' : 'none', // Safari support
-                padding: '10px 30px',          // Always comfy rounded padding
+                padding: '8px 24px',           // Reduced padding
                 borderRadius: '50px',          // Always rounded
                 border: scrolled ? `1px solid ${theme.borderAccent}` : '1px solid transparent',
                 boxShadow: scrolled ? '0 10px 30px rgba(0,0,0,0.1)' : 'none'
@@ -95,9 +95,10 @@ const Navbar = () => {
                     onClick={() => scrollToSection('home')}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}
+                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}
                 >
-                    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+                    {/* Resized Logo SVG */}
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
                         {/* Left Gear */}
                         <motion.g animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}>
                             <circle cx="35" cy="50" r="18" fill="none" stroke={theme.accent} strokeWidth="3.5" />
@@ -113,9 +114,9 @@ const Navbar = () => {
                     </svg>
                     <h1 style={{
                         color: theme.accent,
-                        fontSize: 'clamp(1.4rem, 4vw, 1.8rem)',
+                        fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', // Reduced font size
                         fontWeight: '900',
-                        letterSpacing: '2px',
+                        letterSpacing: '1px',
                         margin: 0
                     }}>
                         DSK<span style={{ color: theme.primaryText }}>.</span>
@@ -123,11 +124,11 @@ const Navbar = () => {
                 </motion.div>
 
                 {/* Theme Toggle */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                     <ThemeToggle />
 
                     {/* Desktop Menu */}
-                    <div className="desktop-nav" style={{ display: 'flex', gap: '12px', alignItems: 'center', background: theme.cardBg, padding: '6px', borderRadius: '16px', border: `1px solid ${theme.border}`, backdropFilter: theme.navBlur }}>
+                    <div className="desktop-nav" style={{ display: 'flex', gap: '6px', alignItems: 'center', background: theme.cardBg, padding: '4px', borderRadius: '24px', border: `1px solid ${theme.border}`, backdropFilter: theme.navBlur }}>
                         {navLinks.map((link) => (
                             <button
                                 key={link.id}
@@ -136,16 +137,16 @@ const Navbar = () => {
                                     background: activeSection === link.id ? `${theme.accent}15` : 'transparent',
                                     border: '1px solid transparent',
                                     borderColor: activeSection === link.id ? theme.borderAccent : 'transparent',
-                                    borderRadius: '12px',
-                                    padding: '8px 18px',
+                                    borderRadius: '20px',
+                                    padding: '6px 14px',
                                     cursor: 'pointer',
-                                    fontSize: '0.8rem',
+                                    fontSize: '0.75rem',
                                     color: activeSection === link.id ? theme.primaryText : theme.mutedText,
                                     fontWeight: activeSection === link.id ? '700' : '500',
                                     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                                     position: 'relative',
                                     textTransform: 'uppercase',
-                                    letterSpacing: '1.5px',
+                                    letterSpacing: '1.2px',
                                     boxShadow: activeSection === link.id ? `0 0 20px ${theme.accent}66` : 'none',
                                     textShadow: activeSection === link.id ? `0 0 10px ${theme.accent}80` : 'none'
                                 }}
@@ -177,7 +178,7 @@ const Navbar = () => {
                             border: `1px solid ${theme.border}`,
                             color: theme.primaryText,
                             cursor: 'pointer',
-                            padding: '10px',
+                            padding: '8px',
                             borderRadius: '12px',
                             display: 'none', // Controlled by CSS
                             alignItems: 'center',
@@ -185,7 +186,7 @@ const Navbar = () => {
                             backdropFilter: theme.navBlur
                         }}
                     >
-                        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
                     </motion.button>
                 </div>
 

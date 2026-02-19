@@ -45,7 +45,7 @@ const PremiumEffects = () => {
                 }}
             />
 
-            {/* 2. Cinematic Grain Overlay - Simplified for Mobile */}
+            {/* 2. Cinematic Grain Overlay - Tuned Up for Texture */}
             <div
                 style={{
                     position: 'fixed',
@@ -55,7 +55,8 @@ const PremiumEffects = () => {
                     height: '100%',
                     pointerEvents: 'none',
                     zIndex: 9998,
-                    opacity: isMobile ? 0.03 : (theme.mode === 'dark' ? 0.07 : 0.05),
+                    // Increased opacity for more visible texture (Film Grain)
+                    opacity: isMobile ? 0.05 : (theme.mode === 'dark' ? 0.09 : 0.06),
                     mixBlendMode: 'overlay',
                 }}
             >
@@ -64,8 +65,8 @@ const PremiumEffects = () => {
                     <filter id="noiseFilter">
                         <feTurbulence
                             type="fractalNoise"
-                            baseFrequency={isMobile ? "0.95" : "0.85"} // Higher frequency is less complex
-                            numOctaves={isMobile ? "1" : "3"} // Dramatically lower octaves on mobile
+                            baseFrequency={isMobile ? "0.80" : "0.65"} // Lower frequency = larger grain chunks
+                            numOctaves={isMobile ? "2" : "4"} // More detail
                             stitchTiles="stitch"
                         />
                     </filter>

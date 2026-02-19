@@ -59,7 +59,7 @@ const Education = ({ data }) => {
                     </p>
                 </motion.div>
 
-                <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '26px' }}>
+                <div style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     {data.map((item, idx) => (
                         <motion.div
                             key={`${item.degree}-${item.year}-${idx}`}
@@ -69,9 +69,11 @@ const Education = ({ data }) => {
                             transition={{ duration: 0.55, delay: idx * 0.05 }}
                             whileHover={{ y: -5, boxShadow: theme.mode === 'dark' ? `0 0 30px ${theme.accent}33` : `0 0 20px rgba(0,0,0,0.1)` }}
                             style={{
-                                background: theme.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.95)',
-                                borderRadius: '26px',
-                                padding: isMobile ? '22px' : '30px',
+                                // Increased transparency for both modes
+                                background: theme.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.6)',
+                                backdropFilter: 'blur(12px)', // Stronger blur for glass effect
+                                borderRadius: '20px', // Slightly smaller radius
+                                padding: isMobile ? '16px' : '24px', // Reduced padding
                                 border: `1px solid ${theme.border}`,
                                 // Simplified theme-aware glow to prevent rendering "shades"
                                 boxShadow: theme.mode === 'dark'

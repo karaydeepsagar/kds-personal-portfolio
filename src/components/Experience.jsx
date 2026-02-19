@@ -50,7 +50,7 @@ const Experience = ({ data }) => {
                     <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '800', marginBottom: '20px', color: theme.primaryText }}>
                         Professional <span style={{ color: theme.accent }}>Journey</span>
                     </h2>
-                    <p style={{ color: theme.mutedText, fontSize: '1.2rem', maxWidth: '700px', margin: '0 auto' }}>
+                    <p style={{ color: theme.mutedText, fontSize: '1.2rem', maxWidth: isMobile ? '700px' : '100%', margin: '0 auto', whiteSpace: isMobile ? 'normal' : 'nowrap' }}>
                         Industrial experience as a Cloud Architect and DevOps Engineer.
                     </p>
                 </motion.div>

@@ -12,8 +12,8 @@ const ThemeToggle = () => {
             onClick={toggleTheme}
             style={{
                 position: 'relative',
-                width: '50px',
-                height: '50px',
+                width: '40px', // Reduced 50 -> 40
+                height: '40px', // Reduced 50 -> 40
                 borderRadius: '50%',
                 border: `1px solid ${theme.border}`,
                 background: theme.glassBg,

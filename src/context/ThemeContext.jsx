@@ -12,33 +12,33 @@ export const useTheme = () => {
 
 export const themes = {
     dark: {
-        // Backgrounds
-        primaryBg: '#000000',
-        secondaryBg: '#0A0A0A',
-        cardBg: 'rgba(255, 255, 255, 0.05)',
-        glassBg: 'rgba(255, 255, 255, 0.03)',
+        // Backgrounds - Deep Void Style
+        primaryBg: '#050505', 
+        secondaryBg: '#0F0F0F',
+        cardBg: 'rgba(20, 20, 20, 0.6)',
+        glassBg: 'rgba(20, 20, 20, 0.4)',
 
         // Text
         primaryText: '#FFFFFF',
         secondaryText: '#E5E5E5',
-        mutedText: '#AAAAAA',
+        mutedText: '#A1A1AA',
 
         // Accents
         accent: '#D10000',
-        accentHover: '#FF0000',
+        accentHover: '#FF1F1F',
 
         // Borders
-        border: 'rgba(255, 255, 255, 0.1)',
-        borderAccent: 'rgba(209, 0, 0, 0.3)',
+        border: 'rgba(255, 255, 255, 0.08)',
+        borderAccent: 'rgba(209, 0, 0, 0.4)',
 
         // Effects
-        glow: 'drop-shadow(0 0 20px rgba(209, 0, 0, 0.6))',
-        glowSubtle: 'drop-shadow(0 0 10px rgba(209, 0, 0, 0.3))',
-        cardShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
+        glow: 'drop-shadow(0 0 25px rgba(209, 0, 0, 0.5))',
+        glowSubtle: 'drop-shadow(0 0 15px rgba(209, 0, 0, 0.2))',
+        cardShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.5)',
 
         // Navbar
-        navBg: 'rgba(0, 0, 0, 0.98)',
-        navBlur: 'blur(15px)',
+        navBg: 'rgba(5, 5, 5, 0.85)',
+        navBlur: 'blur(20px)',
 
         // Animations
         orbitGlow: true,

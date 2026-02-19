@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Github, ExternalLink, Code2 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import SpotlightCard from './SpotlightCard';
 
 const Projects = ({ data }) => {
     const { theme } = useTheme();
@@ -82,115 +83,116 @@ const Projects = ({ data }) => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1, duration: 0.5 }}
-                            whileHover={{ y: -10 }}
-                            style={{
-                                background: theme.cardBg,
-                                borderRadius: '24px',
-                                overflow: 'hidden',
-                                border: `1px solid ${theme.border}`,
-                                backdropFilter: 'blur(20px)',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                boxShadow: theme.cardShadow,
-                                cursor: 'default'
-                            }}
+                            style={{ height: '100%' }}
                         >
-                            <div style={{ height: '220px', overflow: 'hidden', position: 'relative' }}>
-                                <motion.img
-                                    src={project.image}
-                                    alt={project.title}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    whileHover={{ scale: 1.1 }}
-                                    transition={{ duration: 0.5 }}
-                                />
-                                <div style={{
-                                    position: 'absolute',
-                                    top: '15px',
-                                    left: '15px',
-                                    background: theme.mode === 'dark' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.9)',
-                                    padding: '8px',
-                                    borderRadius: '12px',
-                                    backdropFilter: 'blur(5px)'
-                                }}>
-                                    <Code2 size={20} color={theme.accent} />
-                                </div>
-                            </div>
-
-                            <div style={{ padding: '30px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                <h3 style={{ fontSize: '1.6rem', fontWeight: '800', marginBottom: '15px', color: theme.primaryText }}>{project.title}</h3>
-                                {/* Changed color to primaryText for higher contrast (white in dark mode) */}
-                                <p style={{ color: theme.primaryText, marginBottom: '25px', lineHeight: '1.6', fontSize: '1rem', flex: 1 }}>
-                                    {project.description}
-                                </p>
-
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '30px' }}>
-                                    {project.technologies.map((tech, i) => (
-                                        <span key={i} style={{
-                                            fontSize: '0.85rem',
-                                            padding: '6px 14px',
-                                            background: `${theme.accent}1A`,
-                                            color: theme.accent,
-                                            borderRadius: '50px',
-                                            fontWeight: '700',
-                                            border: `1px solid ${theme.borderAccent}`
-                                        }}>
-                                            {tech}
-                                        </span>
-                                    ))}
+                            <SpotlightCard
+                                style={{
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    background: theme.cardBg, // Use updated translucent cardBg
+                                    boxShadow: theme.cardShadow
+                                }}
+                            >
+                                <div style={{ height: '220px', overflow: 'hidden', position: 'relative' }}>
+                                    <motion.img
+                                        src={project.image}
+                                        alt={project.title}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        whileHover={{ scale: 1.1 }}
+                                        transition={{ duration: 0.5 }}
+                                    />
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '15px',
+                                        left: '15px',
+                                        background: theme.mode === 'dark' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.9)',
+                                        padding: '8px',
+                                        borderRadius: '12px',
+                                        backdropFilter: 'blur(5px)'
+                                    }}>
+                                        <Code2 size={20} color={theme.accent} />
+                                    </div>
                                 </div>
 
-                                <div style={{ display: 'flex', gap: '15px' }}>
-                                    {project.link && (
-                                        <a
-                                            href={project.link}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '8px',
-                                                color: theme.primaryText,
-                                                textDecoration: 'none',
-                                                fontSize: '0.9rem',
+                                <div style={{ padding: '30px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                    <h3 style={{ fontSize: '1.6rem', fontWeight: '800', marginBottom: '15px', color: theme.primaryText }}>{project.title}</h3>
+                                    
+                                    <p style={{ color: theme.secondaryText, marginBottom: '25px', lineHeight: '1.6', fontSize: '1rem', flex: 1 }}>
+                                        {project.description}
+                                    </p>
+
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '30px' }}>
+                                        {project.technologies.map((tech, i) => (
+                                            <span key={i} style={{
+                                                fontSize: '0.85rem',
+                                                padding: '6px 14px',
+                                                background: `${theme.accent}1A`,
+                                                color: theme.accent,
+                                                borderRadius: '50px',
                                                 fontWeight: '700',
-                                                padding: '10px 20px',
-                                                borderRadius: '8px',
-                                                background: theme.glassBg,
-                                                border: `1px solid ${theme.border}`,
-                                                transition: 'all 0.3s'
-                                            }}
-                                            onMouseOver={(e) => e.currentTarget.style.background = theme.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}
-                                            onMouseOut={(e) => e.currentTarget.style.background = theme.glassBg}
-                                        >
-                                            <Github size={18} /> Source
-                                        </a>
-                                    )}
-                                    {project.demo && (
-                                        <a
-                                            href={project.demo}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '8px',
-                                                color: theme.mode === 'dark' ? '#000' : '#fff',
-                                                textDecoration: 'none',
-                                                fontSize: '0.9rem',
-                                                fontWeight: '700',
-                                                padding: '10px 20px',
-                                                borderRadius: '8px',
-                                                background: theme.accent,
-                                                transition: 'transform 0.2s'
-                                            }}
-                                            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
-                                            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                                        >
-                                            <ExternalLink size={18} /> Live Demo
-                                        </a>
-                                    )}
+                                                border: `1px solid ${theme.borderAccent}`
+                                            }}>
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '15px' }}>
+                                        {project.link && (
+                                            <a
+                                                href={project.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                    color: theme.primaryText,
+                                                    textDecoration: 'none',
+                                                    fontSize: '0.9rem',
+                                                    fontWeight: '700',
+                                                    padding: '10px 20px',
+                                                    borderRadius: '8px',
+                                                    background: theme.glassBg,
+                                                    border: `1px solid ${theme.border}`,
+                                                    transition: 'all 0.3s',
+                                                    zIndex: 10 // Ensure relative to spotlight
+                                                }}
+                                                onMouseOver={(e) => e.currentTarget.style.background = theme.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}
+                                                onMouseOut={(e) => e.currentTarget.style.background = theme.glassBg}
+                                            >
+                                                <Github size={18} /> Source
+                                            </a>
+                                        )}
+                                        {project.demo && (
+                                            <a
+                                                href={project.demo}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                    color: theme.mode === 'dark' ? '#000' : '#fff',
+                                                    textDecoration: 'none',
+                                                    fontSize: '0.9rem',
+                                                    fontWeight: '700',
+                                                    padding: '10px 20px',
+                                                    borderRadius: '8px',
+                                                    background: theme.accent,
+                                                    transition: 'transform 0.2s',
+                                                    zIndex: 10
+                                                }}
+                                                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
+                                                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                                            >
+                                                <ExternalLink size={18} /> Live Demo
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
+                            </SpotlightCard>
                         </motion.div>
                     ))}
                 </div>
