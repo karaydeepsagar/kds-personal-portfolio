@@ -72,12 +72,13 @@ const CustomCursor = () => {
     // Don't render on touch devices
     if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) return null;
 
-    const accent = theme.accent; // #D10000 — ring colour
-    const dotColor = theme.mode === 'dark' ? '#FFFFFF' : '#000000';
+    const accent = theme.accent;
+    const dotColor = theme.mode === 'dark' ? '#ffffff' : '#111111';
 
     return (
         <>
-            {/* Outer dot — light transparent red, laggy spring follower */}
+            {/* Ember glow — soft blurred red blob, trails with spring lag.
+                Looks like an ambient light source rather than a hard shape. */}
             <motion.div
                 style={{
                     position: 'fixed',
@@ -88,20 +89,21 @@ const CustomCursor = () => {
                     translateX: '-50%',
                     translateY: '-50%',
                     pointerEvents: 'none',
-                    zIndex: 99999,
-                    width: isHovering ? '36px' : '22px',
-                    height: isHovering ? '36px' : '22px',
+                    zIndex: 99998,
+                    width: isHovering ? '60px' : '40px',
+                    height: isHovering ? '60px' : '40px',
                     borderRadius: '50%',
-                    background: isHovering ? `${accent}30` : `${accent}22`,
-                    border: 'none',
-                    opacity: isVisible ? 1 : 0,
-                    transition: 'width 0.25s ease, height 0.25s ease, background 0.25s ease, opacity 0.3s ease',
+                    background: accent,
+                    opacity: isVisible ? (isHovering ? 0.28 : 0.18) : 0,
+                    filter: 'blur(14px)',
+                    transition: 'width 0.3s ease, height 0.3s ease, opacity 0.3s ease',
+                    willChange: 'transform',
                 }}
-                animate={{ scale: isClicking ? 0.75 : 1 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                animate={{ scale: isClicking ? 0.65 : 1 }}
+                transition={{ type: 'spring', stiffness: 350, damping: 22 }}
             />
 
-            {/* Inner dot — instant follower */}
+            {/* Sharp dot — exact cursor position, zero lag, always crisp */}
             <motion.div
                 style={{
                     position: 'fixed',
@@ -113,16 +115,16 @@ const CustomCursor = () => {
                     translateY: '-50%',
                     pointerEvents: 'none',
                     zIndex: 99999,
-                    width: '6px',
-                    height: '6px',
+                    width: '5px',
+                    height: '5px',
                     borderRadius: '50%',
                     background: dotColor,
-                    opacity: isVisible ? (isHovering ? 0 : 1) : 0,
+                    opacity: isVisible ? 1 : 0,
                     transition: 'opacity 0.2s ease',
-                    boxShadow: `0 0 8px #ffffff99`,
+                    willChange: 'transform',
                 }}
-                animate={{ scale: isClicking ? 0.6 : 1 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                animate={{ scale: isClicking ? 0.5 : 1 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 28 }}
             />
         </>
     );
