@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { useMotionValue, useSpring, motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 
 const INTERACTIVE = 'a, button, input, textarea, select, label, [role="button"], [tabindex], .netflix-btn';
@@ -7,145 +7,143 @@ const INTERACTIVE = 'a, button, input, textarea, select, label, [role="button"],
 const CustomCursor = () => {
     const { theme } = useTheme();
     const [isHovering, setIsHovering] = useState(false);
+    const [isVisible, setIsVisible]   = useState(false);
     const [isClicking, setIsClicking] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
-    // Ref tracks visibility inside event-handler closures to avoid the stale-closure
-    // bug where isVisible is always `false` inside onMove, causing setIsVisible(true)
-    // to fire on every single mousemove event and trigger continuous re-renders.
     const isVisibleRef = useRef(false);
 
-    // Raw mouse position — dot follows this instantly
+    // Dot element — updated directly in RAF, no re-renders
+    const dotRef  = useRef(null);
+    // Previous raw position for velocity delta
+    const prevX   = useRef(-100);
+    const prevY   = useRef(-100);
+
+    // Raw mouse — dot snaps here instantly
     const rawX = useMotionValue(-100);
     const rawY = useMotionValue(-100);
 
-    // Ring follows with spring lag
-    const springCfg = { stiffness: 160, damping: 22, mass: 0.6 };
+    // Ring trails with spring
+    const springCfg = { stiffness: 190, damping: 22, mass: 0.5 };
     const ringX = useSpring(rawX, springCfg);
     const ringY = useSpring(rawY, springCfg);
 
+    // ── RAF: position dot + compute velocity → stretch/squash ─────────
     useEffect(() => {
-        // Only enable on pointer devices (not touch-only)
+        let rafId;
+        const tick = () => {
+            rafId = requestAnimationFrame(tick);
+            if (!dotRef.current) return;
+            const cx = rawX.get(), cy = rawY.get();
+            const vx = cx - prevX.current, vy = cy - prevY.current;
+            prevX.current = cx; prevY.current = cy;
+
+            // Position — set directly, zero lag
+            dotRef.current.style.left = cx + 'px';
+            dotRef.current.style.top  = cy + 'px';
+
+            // Velocity liquid — stretch along direction of travel
+            const spd    = Math.sqrt(vx * vx + vy * vy);
+            const angle  = Math.atan2(vy, vx) * 180 / Math.PI;
+            const stretch = Math.min(1 + spd * 0.09, 2.8);
+            const squeeze = 1 / Math.sqrt(stretch);
+            const s = isClicking ? 0.55 : 1;
+
+            dotRef.current.style.transform =
+                `translate(-50%,-50%) rotate(${angle}deg) scaleX(${stretch * s}) scaleY(${squeeze * s})`;
+        };
+        tick();
+        return () => cancelAnimationFrame(rafId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isClicking]);
+
+    // ── Mouse event listeners ────────────────────────────────────────
+    useEffect(() => {
         if (window.matchMedia('(pointer: coarse)').matches) return;
 
         const onMove = (e) => {
             rawX.set(e.clientX);
             rawY.set(e.clientY);
-            // Use ref so we read current value without adding isVisible to deps,
-            // preventing this handler from being recreated on every render.
-            if (!isVisibleRef.current) {
-                isVisibleRef.current = true;
-                setIsVisible(true);
-            }
+            if (!isVisibleRef.current) { isVisibleRef.current = true; setIsVisible(true); }
         };
-
-        const onOver = (e) => {
-            if (e.target.closest(INTERACTIVE)) setIsHovering(true);
-        };
-        const onOut = (e) => {
-            if (e.target.closest(INTERACTIVE)) setIsHovering(false);
-        };
-
-        const onDown = () => setIsClicking(true);
-        const onUp = () => setIsClicking(false);
+        const onOver  = (e) => { if (e.target.closest(INTERACTIVE)) setIsHovering(true); };
+        const onOut   = (e) => { if (e.target.closest(INTERACTIVE)) setIsHovering(false); };
+        const onDown  = () => setIsClicking(true);
+        const onUp    = () => setIsClicking(false);
         const onLeave = () => { isVisibleRef.current = false; setIsVisible(false); };
-        const onEnter = () => { isVisibleRef.current = true; setIsVisible(true); };
+        const onEnter = () => { isVisibleRef.current = true;  setIsVisible(true); };
 
         window.addEventListener('mousemove', onMove);
         window.addEventListener('mouseover', onOver);
-        window.addEventListener('mouseout', onOut);
+        window.addEventListener('mouseout',  onOut);
         window.addEventListener('mousedown', onDown);
-        window.addEventListener('mouseup', onUp);
+        window.addEventListener('mouseup',   onUp);
         document.documentElement.addEventListener('mouseleave', onLeave);
         document.documentElement.addEventListener('mouseenter', onEnter);
-
         return () => {
             window.removeEventListener('mousemove', onMove);
             window.removeEventListener('mouseover', onOver);
-            window.removeEventListener('mouseout', onOut);
+            window.removeEventListener('mouseout',  onOut);
             window.removeEventListener('mousedown', onDown);
-            window.removeEventListener('mouseup', onUp);
+            window.removeEventListener('mouseup',   onUp);
             document.documentElement.removeEventListener('mouseleave', onLeave);
             document.documentElement.removeEventListener('mouseenter', onEnter);
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Don't render on touch devices
     if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) return null;
 
-    const accent = theme.accent; // #D10000
-    // Ring adapts to theme: crisp white on dark, charcoal on light — always legible
-    const ringColor = theme.mode === 'dark' ? 'rgba(255,255,255,0.55)' : 'rgba(30,30,30,0.45)';
-    const ringColorHover = accent;
+    // Dot: white in dark mode, near-black in light mode
+    const dotColor  = theme.mode === 'dark' ? '#ffffff' : '#111111';
+    // Ring: subtle in idle, turns accent-red on hover
+    const ringColor = isHovering
+        ? theme.accent
+        : theme.mode === 'dark' ? 'rgba(255,255,255,0.35)' : 'rgba(20,20,20,0.3)';
 
     return (
         <>
-            {/*
-             * PRECISION CROSSHAIR CURSOR
-             * ─────────────────────────────────────────────────────────────────
-             * Layer 1 — Adaptive ring (spring lag)
-             *   · 30px thin 1.5px ring, white/charcoal to match theme
-             *   · Hover: expands to 42px, turns accent-red
-             *   · Click: snaps inward (scale 0.7)
-             *   Works in both dark & light mode — no blur needed, pure GPU transform
-             *
-             * Layer 2 — Red dot (instant, exact position)
-             *   · Solid 5px accent-red circle — always on top
-             *   · Click: snaps to 3px
-             * ─────────────────────────────────────────────────────────────────
-             */}
-
-            {/* Layer 1: Adaptive ring — spring follower */}
-            <motion.div
+            {/* ── Velocity Liquid dot — direct DOM ref, zero re-renders ── */}
+            <div
+                ref={dotRef}
                 style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    x: ringX,
-                    y: ringY,
-                    translateX: '-50%',
-                    translateY: '-50%',
+                    position:      'fixed',
+                    top:           '-100px',
+                    left:          '-100px',
+                    width:         '11px',
+                    height:        '11px',
+                    borderRadius:  '50%',
+                    background:    dotColor,
+                    opacity:       isVisible ? 1 : 0,
                     pointerEvents: 'none',
-                    zIndex: 99998,
-                    width: isHovering ? '42px' : '30px',
-                    height: isHovering ? '42px' : '30px',
-                    borderRadius: '50%',
-                    border: `1.5px solid ${isHovering ? ringColorHover : ringColor}`,
-                    background: isHovering ? `${accent}15` : 'transparent',
-                    opacity: isVisible ? 1 : 0,
-                    transition:
-                        'width 0.22s cubic-bezier(0.34,1.56,0.64,1), ' +
-                        'height 0.22s cubic-bezier(0.34,1.56,0.64,1), ' +
-                        'border-color 0.2s ease, ' +
-                        'background 0.2s ease, ' +
-                        'opacity 0.25s ease',
-                    willChange: 'transform',
+                    zIndex:        99999,
+                    willChange:    'transform',
+                    transition:    'opacity 0.25s ease, background 0.3s ease',
                 }}
-                animate={{ scale: isClicking ? 0.7 : 1 }}
-                transition={{ type: 'spring', stiffness: 450, damping: 24 }}
             />
 
-            {/* Layer 2: Accent dot — exact, zero-lag, always on top */}
+            {/* ── Ring — spring follower ── */}
             <motion.div
                 style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    x: rawX,
-                    y: rawY,
-                    translateX: '-50%',
-                    translateY: '-50%',
+                    position:      'fixed',
+                    top:           0,
+                    left:          0,
+                    x:             ringX,
+                    y:             ringY,
+                    translateX:    '-50%',
+                    translateY:    '-50%',
                     pointerEvents: 'none',
-                    zIndex: 99999,
-                    width: '5px',
-                    height: '5px',
-                    borderRadius: '50%',
-                    background: accent,
-                    opacity: isVisible ? 1 : 0,
-                    transition: 'opacity 0.2s ease',
-                    willChange: 'transform',
+                    zIndex:        99998,
+                    width:         isHovering ? '20px' : '32px',
+                    height:        isHovering ? '20px' : '32px',
+                    borderRadius:  '50%',
+                    border:        `1px solid ${ringColor}`,
+                    background:    isHovering ? `${theme.accent}12` : 'transparent',
+                    opacity:       isVisible ? 1 : 0,
+                    transition:
+                        'width 0.25s cubic-bezier(0.34,1.56,0.64,1), ' +
+                        'height 0.25s cubic-bezier(0.34,1.56,0.64,1), ' +
+                        'border-color 0.2s ease, background 0.2s ease, opacity 0.25s ease',
+                    willChange:    'transform',
                 }}
-                animate={{ scale: isClicking ? 0.5 : 1 }}
-                transition={{ type: 'spring', stiffness: 700, damping: 30 }}
             />
         </>
     );
