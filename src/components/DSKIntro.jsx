@@ -28,11 +28,11 @@ const DSKIntro = ({ onComplete }) => {
     }, [onComplete]);
 
     // Generate random triangles for EDGES (Top, Bottom, Left, Right corners)
-    // Mobile gets a very small count — 120 infinite-loop framer-motion elements
-    // on mobile GPUs causes severe frame drops. Modern phones have 6-8 cores so
-    // shouldReduceAnimations alone doesn't catch them.
+    // Count is unchanged from original — 120 on normal, 30 on low-power devices.
+    // Smoothness is achieved via GPU hints + disabling infinite float loops on mobile,
+    // NOT by reducing tile count.
     const particles = useMemo(() => {
-        const count = isMobile ? 10 : shouldReduceAnimations ? 20 : 60;
+        const count = shouldReduceAnimations ? 30 : 120;
         return Array.from({ length: count }).map((_, i) => {
             // Distribute into 6 sectors to ensuring coverage
             // 0,1: Top Left / Top Right
