@@ -1,11 +1,15 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
-import { shouldReduceAnimations } from '../hooks/useBreakpoint';
+import { shouldReduceAnimations, useBreakpoint } from '../hooks/useBreakpoint';
 
 const DSKIntro = ({ onComplete }) => {
     const { theme } = useTheme();
+    const { isMobile } = useBreakpoint();
     const [phase, setPhase] = useState('init');
+
+    // Determine animation reduction eagerly — used both in useMemo and JSX
+    const reduceAnim = shouldReduceAnimations || isMobile;
 
     useEffect(() => {
         // Sequence:
@@ -24,9 +28,11 @@ const DSKIntro = ({ onComplete }) => {
     }, [onComplete]);
 
     // Generate random triangles for EDGES (Top, Bottom, Left, Right corners)
-    // Use fewer particles on low-power/TV devices to prevent jank.
+    // Mobile gets a very small count — 120 infinite-loop framer-motion elements
+    // on mobile GPUs causes severe frame drops. Modern phones have 6-8 cores so
+    // shouldReduceAnimations alone doesn't catch them.
     const particles = useMemo(() => {
-        const count = shouldReduceAnimations ? 30 : 120;
+        const count = isMobile ? 10 : shouldReduceAnimations ? 20 : 60;
         return Array.from({ length: count }).map((_, i) => {
             // Distribute into 6 sectors to ensuring coverage
             // 0,1: Top Left / Top Right
@@ -82,6 +88,12 @@ const DSKIntro = ({ onComplete }) => {
                 initial = { y: flyDist, x: 0 };
             }
 
+            // Bake random float-animation durations into particle data so they
+            // are stable across renders and not recomputed in JSX (avoids 120
+            // random() calls on every re-render).
+            const floatDuration = 3 + Math.random() * 2;
+            const rotateDuration = 4 + Math.random() * 3;
+
             return {
                 id: i,
                 style,
@@ -89,10 +101,12 @@ const DSKIntro = ({ onComplete }) => {
                 size,
                 rotation,
                 color,
-                delay
+                delay,
+                floatDuration,
+                rotateDuration
             };
         });
-    }, [theme]);
+    }, [theme, isMobile]);
 
     return (
         <motion.div
@@ -102,12 +116,16 @@ const DSKIntro = ({ onComplete }) => {
                 position: 'fixed',
                 inset: 0,
                 zIndex: 9999,
-                // Background: Keeping it clean/minimal as per "Live Tiles" request
-                // Using theme background to adapt
                 background: theme.primaryBg,
-                // Add a subtle radial gradient from center to edges
                 backgroundImage: `radial-gradient(circle at center, ${theme.primaryBg} 0%, ${theme.secondaryBg || '#f5f5f5'} 100%)`,
-                overflow: 'hidden'
+                overflow: 'hidden',
+                // CSS containment: limits font-swap reflows and paint invalidations
+                // to this element only, preventing them from bubbling to the whole page.
+                contain: 'layout style paint',
+                // Force GPU compositing layer for the entire intro overlay so all
+                // child transforms stay on the GPU thread.
+                transform: 'translateZ(0)',
+                willChange: 'opacity'
             }}
         >
             {/* 1. Scattered Triangle Particles from 4 Corners */}
@@ -130,24 +148,27 @@ const DSKIntro = ({ onComplete }) => {
                     style={{
                         position: 'absolute',
                         ...p.style,
-                        zIndex: 1
+                        zIndex: 1,
+                        // Pre-promote to GPU compositor layer so fly-in
+                        // transform updates bypass the main thread paint step.
+                        willChange: 'transform'
                     }}
                 >
                     {/* Inner interactive triangle */}
                     <motion.div
-                        whileHover={shouldReduceAnimations ? undefined : { 
+                        whileHover={reduceAnim ? undefined : { 
                             scale: 1.2, 
                             rotate: p.rotation + 45, 
                             zIndex: 10
                         }}
-                        animate={shouldReduceAnimations ? undefined : {
+                        animate={reduceAnim ? undefined : {
                             y: [0, -10, 0],
                             rotate: [0, 5, -5, 0]
                         }}
-                        transition={shouldReduceAnimations ? undefined : {
-                            // Float animation
-                            y: { duration: 3 + Math.random() * 2, repeat: Infinity, ease: "easeInOut" },
-                            rotate: { duration: 4 + Math.random() * 3, repeat: Infinity, ease: "easeInOut" }
+                        transition={reduceAnim ? undefined : {
+                            // Durations baked into particle data to avoid random() in hot render path
+                            y: { duration: p.floatDuration, repeat: Infinity, ease: "easeInOut" },
+                            rotate: { duration: p.rotateDuration, repeat: Infinity, ease: "easeInOut" }
                         }}
                         style={{
                             width: 0,
@@ -155,7 +176,9 @@ const DSKIntro = ({ onComplete }) => {
                             borderLeft: `${p.size/2}px solid transparent`,
                             borderRight: `${p.size/2}px solid transparent`,
                             borderBottom: `${p.size}px solid ${p.color}`,
-                            filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))',
+                            // drop-shadow forces a per-element GPU texture upload;
+                            // skip entirely on mobile to halve compositor layer count.
+                            filter: reduceAnim ? 'none' : 'drop-shadow(0 4px 6px rgba(0,0,0,0.15))',
                             cursor: 'pointer',
                             opacity: 0.9
                         }}

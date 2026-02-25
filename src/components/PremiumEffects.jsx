@@ -40,9 +40,11 @@ const PremiumEffects = () => {
             />
 
             {/* 2. Cinematic Grain Overlay
-                 Skipped entirely on low-power devices (TVs, low-core phones) because
-                 SVG feTurbulence is GPU-heavy and causes severe jank on weak hardware. */}
-            {!shouldReduceAnimations && (
+                 Skipped on mobile and low-power devices. SVG feTurbulence re-rasterizes
+                 every frame and is one of the heaviest GPU operations available in CSS —
+                 on mobile it can consume 10-20% of the frame budget alone, contributing
+                 directly to intro jank. Desktop-only feature. */}
+            {!shouldReduceAnimations && !isMobile && (
                 <div
                     style={{
                         position: 'fixed',
@@ -52,7 +54,7 @@ const PremiumEffects = () => {
                         height: '100%',
                         pointerEvents: 'none',
                         zIndex: 9998,
-                        opacity: isMobile ? 0.05 : (theme.mode === 'dark' ? 0.09 : 0.06),
+                        opacity: theme.mode === 'dark' ? 0.09 : 0.06,
                         mixBlendMode: 'overlay',
                     }}
                 >
@@ -60,8 +62,8 @@ const PremiumEffects = () => {
                         <filter id="noiseFilter">
                             <feTurbulence
                                 type="fractalNoise"
-                                baseFrequency={isMobile ? "0.80" : "0.65"}
-                                numOctaves={isMobile ? "2" : "4"}
+                                baseFrequency="0.65"
+                                numOctaves="4"
                                 stitchTiles="stitch"
                             />
                         </filter>
