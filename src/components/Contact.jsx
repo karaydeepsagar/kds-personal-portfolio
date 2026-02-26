@@ -134,15 +134,16 @@ const Contact = ({ data }) => {
                     gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
                     gap: isMobile ? '20px' : '28px',
                     alignItems: 'stretch',
+                    overflowX: 'hidden',
                 }}>
 
                     {/* LEFT TILE — My Details */}
                     <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, x: isMobile ? 0 : -30, y: isMobile ? 20 : 0 }}
+                        whileInView={{ opacity: 1, x: 0, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        style={{ height: '100%' }}
+                        style={{ width: '100%', minWidth: 0 }}
                     >
                     <SpotlightCard style={{
                         height: '100%',
@@ -236,11 +237,11 @@ const Contact = ({ data }) => {
 
                     {/* RIGHT TILE — Contact Form */}
                     <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, x: isMobile ? 0 : 30, y: isMobile ? 20 : 0 }}
+                        whileInView={{ opacity: 1, x: 0, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        style={{ height: '100%' }}
+                        style={{ width: '100%', minWidth: 0 }}
                     >
                     <SpotlightCard style={{
                         height: '100%',
