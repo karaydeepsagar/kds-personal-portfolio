@@ -5,7 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import IndustrialBackground from './IndustrialBackground';
 import { useBreakpoint, shouldReduceAnimations } from '../hooks/useBreakpoint';
 // DevOps & Cloud Icons from multiple sets to ensure availability
-import { SiDocker, SiKubernetes, SiAnsible, SiJenkins, SiDatadog, SiTerraform, SiGrafana, SiGithub } from 'react-icons/si';
+import { SiDocker, SiKubernetes, SiAnsible, SiJenkins, SiDatadog, SiTerraform, SiGrafana, SiGithub, SiAmazonwebservices } from 'react-icons/si';
 import { VscAzure, VscTerminal } from 'react-icons/vsc';
 
 // Official GCP icon (4-colour logo)
