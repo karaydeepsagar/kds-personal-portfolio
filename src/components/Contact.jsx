@@ -100,7 +100,8 @@ const Contact = ({ data }) => {
             />
 
             <div className="section-padding" style={{
-                paddingLeft: '4%', paddingRight: '4%',
+                paddingLeft: isMobile ? '5%' : '4%', paddingRight: isMobile ? '5%' : '4%',
+                paddingTop: isMobile ? '100px' : undefined,
                 minHeight: '100vh', background: 'transparent',
                 display: 'flex', flexDirection: 'column',
                 alignItems: 'center', justifyContent: 'center',
@@ -131,7 +132,7 @@ const Contact = ({ data }) => {
                     maxWidth: '1100px',
                     display: 'grid',
                     gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-                    gap: '28px',
+                    gap: isMobile ? '20px' : '28px',
                     alignItems: 'stretch',
                 }}>
 
@@ -145,7 +146,7 @@ const Contact = ({ data }) => {
                     >
                     <SpotlightCard style={{
                         height: '100%',
-                        padding: '2.5rem',
+                        padding: isMobile ? '1.5rem' : '2.5rem',
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '1.5rem',
@@ -243,7 +244,7 @@ const Contact = ({ data }) => {
                     >
                     <SpotlightCard style={{
                         height: '100%',
-                        padding: '2.5rem',
+                        padding: isMobile ? '1.5rem' : '2.5rem',
                         display: 'flex',
                         flexDirection: 'column',
                         borderRadius: '24px',

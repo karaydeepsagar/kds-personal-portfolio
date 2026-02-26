@@ -24,16 +24,16 @@ export const themes = {
         mutedText: '#A1A1AA',
 
         // Accents
-        accent: '#D10000',
-        accentHover: '#FF1F1F',
+        accent: '#B22222',
+        accentHover: '#CC2E2E',
 
         // Borders
         border: 'rgba(255, 255, 255, 0.08)',
-        borderAccent: 'rgba(209, 0, 0, 0.4)',
+        borderAccent: 'rgba(178, 34, 34, 0.4)',
 
         // Effects
-        glow: 'drop-shadow(0 0 25px rgba(209, 0, 0, 0.5))',
-        glowSubtle: 'drop-shadow(0 0 15px rgba(209, 0, 0, 0.2))',
+        glow: 'drop-shadow(0 0 25px rgba(178, 34, 34, 0.5))',
+        glowSubtle: 'drop-shadow(0 0 15px rgba(178, 34, 34, 0.2))',
         cardShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.5)',
 
         // Navbar
@@ -60,12 +60,12 @@ export const themes = {
         mutedText: '#64748B',
 
         // Accents
-        accent: '#D10000',
-        accentHover: '#A00000',
+        accent: '#B22222',
+        accentHover: '#8B1A1A',
 
         // Borders
         border: 'rgba(0, 0, 0, 0.1)',
-        borderAccent: 'rgba(209, 0, 0, 0.25)',
+        borderAccent: 'rgba(178, 34, 34, 0.25)',
 
         // Effects
         glow: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))',

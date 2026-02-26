@@ -28,7 +28,7 @@ class ErrorBoundary extends React.Component {
                     gap: '20px',
                     padding: '20px'
                 }}>
-                    <h1 style={{ fontSize: '2rem', color: '#D10000' }}>Oops! Something went wrong</h1>
+                    <h1 style={{ fontSize: '2rem', color: '#B22222' }}>Oops! Something went wrong</h1>
                     <p style={{ fontSize: '1rem', color: '#aaa', maxWidth: '600px', textAlign: 'center' }}>
                         {this.state.error?.message || 'An unexpected error occurred'}
                     </p>
@@ -36,7 +36,7 @@ class ErrorBoundary extends React.Component {
                         onClick={() => window.location.reload()}
                         style={{
                             padding: '12px 30px',
-                            background: '#D10000',
+                            background: '#B22222',
                             color: '#fff',
                             border: 'none',
                             borderRadius: '8px',

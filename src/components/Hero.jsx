@@ -44,7 +44,7 @@ const DevOpsAtom = ({ theme, isActive = true }) => {
             tools: [
                 { Icon: SiDocker, color: '#61b1ed' },
                 { Icon: SiKubernetes, color: '#1b53cc' },
-                { Icon: SiAnsible, color: '#D10000' }
+                { Icon: SiAnsible, color: '#B22222' }
             ],
             direction: 1 // Clockwise
         },
