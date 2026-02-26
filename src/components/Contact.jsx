@@ -139,9 +139,9 @@ const Contact = ({ data }) => {
 
                     {/* LEFT TILE — My Details */}
                     <motion.div
-                        initial={{ opacity: 0, x: isMobile ? 0 : -30, y: isMobile ? 20 : 0 }}
-                        whileInView={{ opacity: 1, x: 0, y: 0 }}
-                        viewport={{ once: true }}
+                        initial={{ x: isMobile ? 0 : -30, y: isMobile ? 20 : 0 }}
+                        whileInView={{ x: 0, y: 0 }}
+                        viewport={{ once: true, amount: 0.1 }}
                         transition={{ duration: 0.6 }}
                         style={{ width: '100%', minWidth: 0 }}
                     >
@@ -237,9 +237,9 @@ const Contact = ({ data }) => {
 
                     {/* RIGHT TILE — Contact Form */}
                     <motion.div
-                        initial={{ opacity: 0, x: isMobile ? 0 : 30, y: isMobile ? 20 : 0 }}
-                        whileInView={{ opacity: 1, x: 0, y: 0 }}
-                        viewport={{ once: true }}
+                        initial={{ x: isMobile ? 0 : 30, y: isMobile ? 20 : 0 }}
+                        whileInView={{ x: 0, y: 0 }}
+                        viewport={{ once: true, amount: 0.1 }}
                         transition={{ duration: 0.6, delay: 0.1 }}
                         style={{ width: '100%', minWidth: 0 }}
                     >
